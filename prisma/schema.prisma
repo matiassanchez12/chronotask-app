@@ -20,6 +20,18 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   tasks     Task[]
+  settings  UserSettings?
+}
+
+model UserSettings {
+  id                      String  @id @default(cuid())
+  userId                  String  @unique
+  pomodoroDuration        Int     @default(25)
+  shortBreakDuration      Int     @default(5)
+  longBreakDuration       Int     @default(15)
+  confirmBeforeDelete     Boolean @default(true)
+  fontSize                Int     @default(16)
+  user                    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Task {

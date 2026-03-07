@@ -33,7 +33,7 @@ export default async function Home({
   });
 
   return (
-    <main className="min-h-screen bg-background text-foreground px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+    <div className="min-h-screen bg-background text-foreground px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <Header />
         <div className="flex justify-end mb-4">
@@ -42,6 +42,6 @@ export default async function Home({
         <Filters />
         <Tasks tasks={tasks} />
       </div>
-    </main>
+    </div>
   );
 }
