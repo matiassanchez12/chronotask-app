@@ -4,6 +4,7 @@ import ModeToggle from "@/components/modeToggle";
 import Tasks from "@/components/tasks";
 import { prisma } from "@/lib/prisma";
 import { getDateRange } from "@/lib/dateFilters";
+import { getServerSession } from "next-auth";
 
 interface HomeProps {
   searchParams: Promise<{ filter?: string; mode?: string }>;
@@ -13,18 +14,21 @@ export default async function Home({
   searchParams,
 }: HomeProps) {
   const params = await searchParams;
+  const session = await getServerSession();
+  const userId = session?.user?.id;
   const filter = params?.filter ?? "today";
   const range = getDateRange(filter);
 
   const tasks = await prisma.task.findMany({
-    where: range
-      ? {
-          dueDate: {
-            gte: range.from,
-            lte: range.to,
-          },
-        }
-      : {},
+    where: {
+      ...(range ? {
+        dueDate: {
+          gte: range.from,
+          lte: range.to,
+        },
+      } : {}),
+      userId: userId,
+    },
     orderBy: { dueDate: "asc" },
   });
 

@@ -2,11 +2,19 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { authOptions, getServerSession } from '@/lib/auth';
 
 export type ActionResult = { success: true } | { success: false; error: string };
 
 export async function createTask(formData: FormData): Promise<ActionResult> {
   try {
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.id;
+
+    if (!userId) {
+      return { success: false, error: "No estas autenticado" };
+    }
+
     const title = formData.get("title") as string;
     const dueDate = formData.get("dueDate") as string;
     const priority = (formData.get("priority") as string) || "medium";
@@ -23,10 +31,11 @@ export async function createTask(formData: FormData): Promise<ActionResult> {
         priority,
         startTime: startTime ? new Date(startTime) : null,
         endTime: endTime ? new Date(endTime) : null,
+        userId,
       },
     });
 
-    revalidatePath("/");
+    revalidatePath("/admin");
     return { success: true };
   } catch (e) {
     console.error("createTask:", e);

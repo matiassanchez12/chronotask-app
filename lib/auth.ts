@@ -1,10 +1,16 @@
-import NextAuth, { AuthOptions } from "next-auth";
+import NextAuth, { AuthOptions, getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
 export const authOptions: AuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
     CredentialsProvider({
       name: "credentials",
       credentials: {
@@ -45,9 +51,30 @@ export const authOptions: AuthOptions = {
     signIn: "/sign-in",
   },
   callbacks: {
-    async jwt({ token, user }: { token: any; user?: any }) {
+    async jwt({ token, user, account }: { token: any; user?: any; account?: any }) {
       if (user) {
         token.id = user.id;
+      }
+      if (account?.provider === "google" && user?.email) {
+        try {
+          const existingUser = await prisma.user.findUnique({
+            where: { email: user.email },
+          });
+          if (existingUser) {
+            token.id = existingUser.id;
+          } else {
+            const newUser = await prisma.user.create({
+              data: {
+                email: user.email,
+                name: user.name || null,
+                password: bcrypt.hashSync(Math.random().toString(36), 10),
+              },
+            });
+            token.id = newUser.id;
+          }
+        } catch (e) {
+          console.error("Google auth error:", e);
+        }
       }
       return token;
     },
@@ -63,4 +90,7 @@ export const authOptions: AuthOptions = {
   },
 };
 
-export const { handlers, signIn, signOut, auth } = NextAuth(authOptions);
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };
+export { getServerSession };
