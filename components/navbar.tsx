@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
+import { useTheme } from "next-themes";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { LogOut, User } from "lucide-react";
+import { LogOut, User, Moon, Sun } from "lucide-react";
 
 export default function Navbar() {
   const { data: session } = useSession();
   const [open, setOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   const userInitials = session?.user?.name
     ? session.user.name
@@ -18,6 +20,10 @@ export default function Navbar() {
         .toUpperCase()
         .slice(0, 2)
     : session?.user?.email?.[0].toUpperCase() || "?";
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   return (
     <nav className="h-14 border-b border-border flex items-center justify-between px-4 bg-background">
@@ -45,6 +51,25 @@ export default function Navbar() {
                 <span className="text-xs text-muted-foreground">{session?.user?.email}</span>
               </div>
             </div>
+            
+            <Button
+              variant="outline"
+              className="w-full justify-start gap-2"
+              onClick={toggleTheme}
+            >
+              {theme === "dark" ? (
+                <>
+                  <Sun className="h-4 w-4" />
+                  Modo claro
+                </>
+              ) : (
+                <>
+                  <Moon className="h-4 w-4" />
+                  Modo oscuro
+                </>
+              )}
+            </Button>
+            
             <Button
               variant="outline"
               className="w-full justify-start gap-2"
