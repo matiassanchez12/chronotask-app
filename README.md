@@ -1,16 +1,17 @@
+# tododoro
+
 ## Next js FE
 ## Server Actions BE
 ## Shadcn UI
 ## Prisma SQL DB
-## Clerk Auth
+## NextAuth Auth
 
 ## TODO List
 
 - [x] Crear esquemas iniciales de Prisma
 - [x] Planificar próximos features y prioridades
-- [ ] Integrar Clerk para autenticación
-- [ ] Crear primeras páginas protegidas/autenticadas
-- [ ] Hacer pruebas de flujo de autenticación con Clerk
+- [x] Integrar NextAuth para autenticación
+- [x] Crear primeras páginas protegidas/autenticadas
 - [x] Desarrollar los primeros componentes UI con Shadcn
 - [x] Configurar entorno de desarrollo local
 - [x] Definir la arquitectura de carpetas del proyecto
@@ -23,9 +24,8 @@ Orden sugerido por dependencias y valor. Ajusta prioridad (P1 = urgente, P2 = im
 
 | Prioridad | Feature | Notas / dependencias |
 |-----------|---------|----------------------|
-| P1 | Integrar Clerk | Base para páginas protegidas |
 | P1 | Esquemas Prisma + migraciones | DB lista antes de más features |
-| P2 | Páginas protegidas | Después de Clerk |
+| P2 | Páginas protegidas | Después de NextAuth |
 | P3 | Pruebas de flujo auth | Cuando el flujo esté estable |
 | P3 | Otros features | Ej: filtros avanzados, export, etc. |
 | P3 | Modes | Ej: Pomodoro mode, todo mode. Darkmode, Lightmode |
