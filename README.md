@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Next js FE
+## Server Actions BE
+## Shadcn UI
+## Prisma SQL DB
+## Clerk Auth
 
-## Getting Started
+## TODO List
 
-First, run the development server:
+- [x] Crear esquemas iniciales de Prisma
+- [x] Planificar próximos features y prioridades
+- [ ] Integrar Clerk para autenticación
+- [ ] Crear primeras páginas protegidas/autenticadas
+- [ ] Hacer pruebas de flujo de autenticación con Clerk
+- [x] Desarrollar los primeros componentes UI con Shadcn
+- [x] Configurar entorno de desarrollo local
+- [x] Definir la arquitectura de carpetas del proyecto
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Roadmap / Próximos features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Orden sugerido por dependencias y valor. Ajusta prioridad (P1 = urgente, P2 = importante, P3 = cuando haya tiempo).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Prioridad | Feature | Notas / dependencias |
+|-----------|---------|----------------------|
+| P1 | Integrar Clerk | Base para páginas protegidas |
+| P1 | Esquemas Prisma + migraciones | DB lista antes de más features |
+| P2 | Páginas protegidas | Después de Clerk |
+| P3 | Pruebas de flujo auth | Cuando el flujo esté estable |
+| P3 | Otros features | Ej: filtros avanzados, export, etc. |
+| P3 | Modes | Ej: Pomodoro mode, todo mode. Darkmode, Lightmode |
+| P3 | Integrar wpp api, para recordatorios de alguna task | buscar alguna api free. |
 
-## Learn More
+**Cómo usar este roadmap**
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Corto plazo (esta semana):** elige 1–2 ítems P1 y ponlos en tu TODO.
+2. **Mediano plazo (este mes):** revisa la tabla y mueve ítems según lo que ya terminaste.
+3. **Ideas nuevas:** añádelas abajo con prioridad P3 y luego sube a P2/P1 si las quieres hacer pronto.
