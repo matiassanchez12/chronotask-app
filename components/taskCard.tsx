@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toggleTask } from "@/app/actions/toggleTask";
+import { deleteTask } from "@/app/actions/deleteTask";
+import { getDeleteConfirmationSetting } from "@/app/actions/settings";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -21,6 +23,24 @@ interface PriorityConfig {
 
 export default function TaskCard({ task }: { task: Task }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [confirmBeforeDelete, setConfirmBeforeDelete] = useState(true);
+
+  useEffect(() => {
+    getDeleteConfirmationSetting().then(setConfirmBeforeDelete);
+  }, []);
+
+  const handleDelete = async () => {
+    if (confirmBeforeDelete) {
+      setShowDeleteModal(true);
+    } else {
+      const result = await deleteTask(task.id);
+      if (result.success) {
+        toast.success("Tarea eliminada");
+      } else {
+        toast.error(result.error);
+      }
+    }
+  };
 
   const priorityConfig: Record<string, PriorityConfig> = {
     high: { variant: "destructive", label: "Alta" },
@@ -79,7 +99,7 @@ export default function TaskCard({ task }: { task: Task }) {
               size="icon"
               variant="ghost"
               className="h-8 w-8 text-muted-foreground hover:text-destructive"
-              onClick={() => setShowDeleteModal(true)}
+              onClick={handleDelete}
             >
               <Trash2 className="h-4 w-4" />
             </Button>

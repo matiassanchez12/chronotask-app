@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  UserSettings: 'UserSettings',
   Task: 'Task'
 } as const
 
@@ -81,6 +82,19 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const UserSettingsScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  pomodoroDuration: 'pomodoroDuration',
+  shortBreakDuration: 'shortBreakDuration',
+  longBreakDuration: 'longBreakDuration',
+  confirmBeforeDelete: 'confirmBeforeDelete',
+  fontSize: 'fontSize'
+} as const
+
+export type UserSettingsScalarFieldEnum = (typeof UserSettingsScalarFieldEnum)[keyof typeof UserSettingsScalarFieldEnum]
 
 
 export const TaskScalarFieldEnum = {

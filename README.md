@@ -24,7 +24,8 @@ Orden sugerido por dependencias y valor. Ajusta prioridad (P1 = urgente, P2 = im
 
 | Prioridad | Feature | Notas / dependencias |
 |-----------|---------|----------------------|
-| P1 | Esquemas Prisma + migraciones | DB lista antes de más features |
+| P1 | Esquemas Prisma + migraciones | DB lista antes de más features | 
+| P1 | Crear pagina configuraciones - Secciones: Eliminar cuenta | Configurar pomodoro time | configuracion para Boton eliminar de cardtask: mostrar modal de confirmacion o no |
 | P2 | Páginas protegidas | Después de NextAuth |
 | P3 | Pruebas de flujo auth | Cuando el flujo esté estable |
 | P3 | Otros features | Ej: filtros avanzados, export, etc. |

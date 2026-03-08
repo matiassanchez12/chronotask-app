@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
+import Link from "next/link";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { LogOut, Moon, Sun, Bell } from "lucide-react";
+import { LogOut, Moon, Sun, Bell, Settings } from "lucide-react";
 import Image from "next/image";
 
 export default function Navbar() {
@@ -17,11 +18,11 @@ export default function Navbar() {
 
   const userInitials = session?.user?.name
     ? session.user.name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2)
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2)
     : session?.user?.email?.[0].toUpperCase() || "?";
 
   const toggleTheme = () => {
@@ -30,16 +31,16 @@ export default function Navbar() {
 
   return (
     <nav className="h-14 border-b border-border flex items-center justify-between px-4 bg-background">
-      <div className="flex items-center gap-2">
-        <Image 
-          src="/logo.svg" 
-          alt="Tododoro" 
-          width={68} 
+      <Link href="/admin" className="flex items-center gap-2">
+        <Image
+          src="/logo.svg"
+          alt="Tododoro"
+          width={68}
           height={68}
           className={`object-contain ${theme === "dark" ? "invert brightness-90" : ""}`}
         />
         <span className="font-semibold text-lg">Tododoro</span>
-      </div>
+      </Link>
 
       <div className="flex items-center gap-2">
         <Button
@@ -50,7 +51,7 @@ export default function Navbar() {
         >
           <Bell className="h-5 w-5" />
           {notificationCount > 0 && (
-            <Badge 
+            <Badge
               className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-[10px] bg-destructive text-destructive-foreground"
             >
               {notificationCount}
@@ -76,7 +77,7 @@ export default function Navbar() {
                   <span className="text-xs text-muted-foreground">{session?.user?.email}</span>
                 </div>
               </div>
-              
+
               <Button
                 variant="outline"
                 className="w-full justify-start gap-2 transition-all duration-200"
@@ -92,7 +93,14 @@ export default function Navbar() {
                 </span>
                 {theme === "dark" ? "Modo claro" : "Modo oscuro"}
               </Button>
-              
+
+              <Link href="/settings">
+                <Button variant="outline" className="w-full justify-start gap-2">
+                  <Settings className="h-4 w-4" />
+                  Configuración
+                </Button>
+              </Link>
+
               <Button
                 variant="outline"
                 className="w-full justify-start gap-2"
