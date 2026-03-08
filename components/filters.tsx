@@ -11,7 +11,7 @@ export default function Filters() {
   return (
     <Tabs
       value={active}
-      onValueChange={(value) => router.push(`/admin?filter=${value}`)}
+      onValueChange={(value) => router.push(`/admin?filter=${value}&mode=todo`)}
       className="mb-6"
     >
       <TabsList className="bg-card border border-border">
@@ -20,7 +20,6 @@ export default function Filters() {
         <TabsTrigger value="week" className="data-[state=inactive]:text-foreground cursor-pointer">Semana</TabsTrigger>
         <TabsTrigger value="month" className="data-[state=inactive]:text-foreground cursor-pointer">Mes</TabsTrigger>
         <TabsTrigger value="all" className="data-[state=inactive]:text-foreground cursor-pointer">Todas</TabsTrigger>
-        
       </TabsList>
     </Tabs>
   );

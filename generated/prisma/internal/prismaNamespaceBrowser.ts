@@ -105,6 +105,8 @@ export const TaskScalarFieldEnum = {
   endTime: 'endTime',
   priority: 'priority',
   completed: 'completed',
+  workTimeMinutes: 'workTimeMinutes',
+  breakTimeMinutes: 'breakTimeMinutes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   userId: 'userId'

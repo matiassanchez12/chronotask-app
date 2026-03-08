@@ -177,3 +177,142 @@ Configured in `tsconfig.json`:
 - UI text is in Spanish (e.g., "Nueva Tarea", "Título") but code is in English
 - This is a task management dashboard with filtering by date range
 - Uses Next.js 16.1.6 with React 19
+- Main page: `app/admin/page.tsx`
+
+## Database Models (Prisma Schema)
+
+### User
+
+```prisma
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tasks     Task[]
+  settings  UserSettings?
+}
+```
+
+### UserSettings
+
+```prisma
+model UserSettings {
+  id                  String  @id @default(cuid())
+  userId              String  @unique
+  pomodoroDuration    Int     @default(25)
+  shortBreakDuration  Int     @default(5)
+  longBreakDuration   Int     @default(15)
+  confirmBeforeDelete Boolean @default(true)
+  fontSize            Int     @default(16)
+  user                User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+```
+
+### Task
+
+```prisma
+model Task {
+  id               String    @id @default(cuid())
+  title            String
+  dueDate          DateTime
+  startTime        DateTime?
+  endTime          DateTime?
+  priority         String    @default("medium")
+  completed        Boolean   @default(false)
+  workTimeMinutes  Int?      @default(0)
+  breakTimeMinutes Int?      @default(0)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  userId           String
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+```
+
+## Counter/Pomodoro Feature
+
+### Overview
+
+The counter mode displays active tasks with a Pomodoro-style timer. It automatically tracks work/break sessions based on user settings.
+
+### User Settings
+
+User settings are stored in `UserSettings` model:
+- `pomodoroDuration`: work session length in minutes (default: 25)
+- `shortBreakDuration`: break session length in minutes (default: 5)
+- `longBreakDuration`: long break session length (default: 15)
+
+### Files
+
+| File | Purpose |
+|------|---------|
+| `components/counter.tsx` | Main counter component with Pomodoro logic |
+| `components/modeToggle.tsx` | Toggle between counter and todo modes |
+| `app/admin/page.tsx` | Passes settings and detects active tasks |
+| `app/actions/completeTask.ts` | Marks task as completed |
+| `app/actions/updateTaskTime.ts` | Updates task start/end times |
+
+### Features
+
+1. **Active Task Detection**: Automatically switches to counter mode when a task is within its scheduled time (`startTime` - `endTime`)
+
+2. **Work/Break Cycles**: 
+   - Calculates number of pomodoros based on task duration and settings
+   - Alternates between work (primary color) and break (green) phases
+   - Automatically transitions between phases
+   - Long break (15 min) after every 4 pomodoros
+
+3. **Visual Progress Bars**:
+   - Each pomodoro shows two segments: work (primary) + break (green)
+   - Width proportional to configured durations
+   - Animated pulse on current segment
+
+4. **Advance Button**:
+   - Advances to next phase without modifying task schedule
+   - Adds remaining time of current phase to accumulated time
+   - Completes task if it's the last phase
+
+5. **Auto-Complete**:
+   - When all pomodoros complete, task is automatically marked as completed
+   - Saves total work time and break time to database
+
+6. **Task Card Status**:
+   - Shows "En proceso" badge (amber) for active tasks in todo mode
+   - Only shows for uncompleted tasks within their scheduled time
+
+### Key Implementation Details
+
+- Counter uses `useMemo` for calculations to avoid unnecessary re-renders
+- Timer updates every second via `setInterval`
+- Phase detection based on current time vs pomodoro start/end times
+- Active tasks filtered from all user tasks in real-time
+- Completed tasks are excluded from counter view
+- Advance button does NOT modify task schedule times
+- `accumulatedTime` state resets when changing to a different task
+- `completedTaskId` resets when changing tasks
+- Helper functions (`getPhaseColor`, `getPhaseIcon`, `getPhaseLabel`) are defined outside the component
+
+---
+
+## Recent Changes (Session Notes)
+
+### Mode Toggle
+- User can manually switch to "todo" mode even when there are active tasks
+- Default behavior: counter if active tasks exist, otherwise todo
+- File: `components/modeToggle.tsx`
+
+### Task Card
+- Shows amber "En proceso" badge when task is active (within scheduled time and not completed)
+- File: `components/taskCard.tsx`
+
+### Time Input
+- Both create and edit task forms now use `Input type="time"` instead of Select
+- Allows manual entry in addition to selection
+- Files: `components/addTaskModal.tsx`, `components/editTaskDialog.tsx`
+
+### Prisma
+- Added `workTimeMinutes` and `breakTimeMinutes` fields to Task model
+- Migration applied: `20260308183704_add_work_break_times`
+- `completeTask` action now accepts optional `workTimeMinutes` and `breakTimeMinutes` parameters

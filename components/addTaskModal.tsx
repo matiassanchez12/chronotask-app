@@ -11,13 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Flag, Plus, Clock } from "lucide-react";
 import { Modal } from "@/components/ui/modal";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { PopoverTrigger, Popover, PopoverContent } from "./ui/popover";
@@ -204,23 +198,11 @@ export default function AddTaskModal() {
                   name="startTime"
                   control={control}
                   render={({ field }) => (
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="bg-background border-input text-foreground focus:border-ring focus:bg-background/80 h-9">
-                        <SelectValue placeholder="Inicio" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-popover border-border max-h-60">
-                        {Array.from({ length: 48 }).map((_, i) => {
-                          const hours = Math.floor(i / 2);
-                          const minutes = i % 2 === 0 ? "00" : "30";
-                          const value = `${hours.toString().padStart(2, "0")}:${minutes}`;
-                          return (
-                            <SelectItem key={value} value={value} className="text-foreground">
-                              {value}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      type="time"
+                      {...field}
+                      className="bg-background border-input text-foreground focus:border-ring focus:bg-background/80 h-9"
+                    />
                   )}
                 />
               </div>
@@ -230,23 +212,11 @@ export default function AddTaskModal() {
                   name="endTime"
                   control={control}
                   render={({ field }) => (
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="bg-background border-input text-foreground focus:border-ring focus:bg-background/80 h-9">
-                        <SelectValue placeholder="Fin" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-popover border-border max-h-60">
-                        {Array.from({ length: 48 }).map((_, i) => {
-                          const hours = Math.floor(i / 2);
-                          const minutes = i % 2 === 0 ? "00" : "30";
-                          const value = `${hours.toString().padStart(2, "0")}:${minutes}`;
-                          return (
-                            <SelectItem key={value} value={value} className="text-foreground">
-                              {value}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      type="time"
+                      {...field}
+                      className="bg-background border-input text-foreground focus:border-ring focus:bg-background/80 h-9"
+                    />
                   )}
                 />
               </div>

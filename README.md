@@ -32,6 +32,7 @@ Orden sugerido por dependencias y valor. Ajusta prioridad (P1 = urgente, P2 = im
 | P3 | Modes | Ej: Pomodoro mode, todo mode. Darkmode, Lightmode |
 | P3 | Integrar wpp api, para recordatorios de alguna task | buscar alguna api free. [nocreo que exista] |
 | P3 | en lugar de wpp api usar las notificaciones de chrome |
+| P3 | Se crea el counter section |
 | P3 | Que tiene la app de pomodoro? si bien va a tener un contador con el tiempo que se le lleva dedicando a la tarea actual, eso no es pomodoro. 
 Para que se use el concepto de pomodoro, la app tendria que aplicar un contador que se ejecute cada cierto tiempo y sirva como una pausa de descanso. 
 Ese cierto tiempo sera configurable por el usuario. Y cuando la tarea se este ejecutando el usuario tendra la posibilidad de elegir que el modo pomodoro se active o no|

@@ -20,8 +20,20 @@ export type TaskModel = runtime.Types.Result.DefaultSelection<Prisma.$TaskPayloa
 
 export type AggregateTask = {
   _count: TaskCountAggregateOutputType | null
+  _avg: TaskAvgAggregateOutputType | null
+  _sum: TaskSumAggregateOutputType | null
   _min: TaskMinAggregateOutputType | null
   _max: TaskMaxAggregateOutputType | null
+}
+
+export type TaskAvgAggregateOutputType = {
+  workTimeMinutes: number | null
+  breakTimeMinutes: number | null
+}
+
+export type TaskSumAggregateOutputType = {
+  workTimeMinutes: number | null
+  breakTimeMinutes: number | null
 }
 
 export type TaskMinAggregateOutputType = {
@@ -32,6 +44,8 @@ export type TaskMinAggregateOutputType = {
   endTime: Date | null
   priority: string | null
   completed: boolean | null
+  workTimeMinutes: number | null
+  breakTimeMinutes: number | null
   createdAt: Date | null
   updatedAt: Date | null
   userId: string | null
@@ -45,6 +59,8 @@ export type TaskMaxAggregateOutputType = {
   endTime: Date | null
   priority: string | null
   completed: boolean | null
+  workTimeMinutes: number | null
+  breakTimeMinutes: number | null
   createdAt: Date | null
   updatedAt: Date | null
   userId: string | null
@@ -58,12 +74,24 @@ export type TaskCountAggregateOutputType = {
   endTime: number
   priority: number
   completed: number
+  workTimeMinutes: number
+  breakTimeMinutes: number
   createdAt: number
   updatedAt: number
   userId: number
   _all: number
 }
 
+
+export type TaskAvgAggregateInputType = {
+  workTimeMinutes?: true
+  breakTimeMinutes?: true
+}
+
+export type TaskSumAggregateInputType = {
+  workTimeMinutes?: true
+  breakTimeMinutes?: true
+}
 
 export type TaskMinAggregateInputType = {
   id?: true
@@ -73,6 +101,8 @@ export type TaskMinAggregateInputType = {
   endTime?: true
   priority?: true
   completed?: true
+  workTimeMinutes?: true
+  breakTimeMinutes?: true
   createdAt?: true
   updatedAt?: true
   userId?: true
@@ -86,6 +116,8 @@ export type TaskMaxAggregateInputType = {
   endTime?: true
   priority?: true
   completed?: true
+  workTimeMinutes?: true
+  breakTimeMinutes?: true
   createdAt?: true
   updatedAt?: true
   userId?: true
@@ -99,6 +131,8 @@ export type TaskCountAggregateInputType = {
   endTime?: true
   priority?: true
   completed?: true
+  workTimeMinutes?: true
+  breakTimeMinutes?: true
   createdAt?: true
   updatedAt?: true
   userId?: true
@@ -143,6 +177,18 @@ export type TaskAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: TaskAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: TaskSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: TaskMinAggregateInputType
@@ -173,6 +219,8 @@ export type TaskGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: TaskCountAggregateInputType | true
+  _avg?: TaskAvgAggregateInputType
+  _sum?: TaskSumAggregateInputType
   _min?: TaskMinAggregateInputType
   _max?: TaskMaxAggregateInputType
 }
@@ -185,10 +233,14 @@ export type TaskGroupByOutputType = {
   endTime: Date | null
   priority: string
   completed: boolean
+  workTimeMinutes: number | null
+  breakTimeMinutes: number | null
   createdAt: Date
   updatedAt: Date
   userId: string
   _count: TaskCountAggregateOutputType | null
+  _avg: TaskAvgAggregateOutputType | null
+  _sum: TaskSumAggregateOutputType | null
   _min: TaskMinAggregateOutputType | null
   _max: TaskMaxAggregateOutputType | null
 }
@@ -219,6 +271,8 @@ export type TaskWhereInput = {
   endTime?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   priority?: Prisma.StringFilter<"Task"> | string
   completed?: Prisma.BoolFilter<"Task"> | boolean
+  workTimeMinutes?: Prisma.IntNullableFilter<"Task"> | number | null
+  breakTimeMinutes?: Prisma.IntNullableFilter<"Task"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   userId?: Prisma.StringFilter<"Task"> | string
@@ -233,6 +287,8 @@ export type TaskOrderByWithRelationInput = {
   endTime?: Prisma.SortOrderInput | Prisma.SortOrder
   priority?: Prisma.SortOrder
   completed?: Prisma.SortOrder
+  workTimeMinutes?: Prisma.SortOrderInput | Prisma.SortOrder
+  breakTimeMinutes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -250,6 +306,8 @@ export type TaskWhereUniqueInput = Prisma.AtLeast<{
   endTime?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   priority?: Prisma.StringFilter<"Task"> | string
   completed?: Prisma.BoolFilter<"Task"> | boolean
+  workTimeMinutes?: Prisma.IntNullableFilter<"Task"> | number | null
+  breakTimeMinutes?: Prisma.IntNullableFilter<"Task"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   userId?: Prisma.StringFilter<"Task"> | string
@@ -264,12 +322,16 @@ export type TaskOrderByWithAggregationInput = {
   endTime?: Prisma.SortOrderInput | Prisma.SortOrder
   priority?: Prisma.SortOrder
   completed?: Prisma.SortOrder
+  workTimeMinutes?: Prisma.SortOrderInput | Prisma.SortOrder
+  breakTimeMinutes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   _count?: Prisma.TaskCountOrderByAggregateInput
+  _avg?: Prisma.TaskAvgOrderByAggregateInput
   _max?: Prisma.TaskMaxOrderByAggregateInput
   _min?: Prisma.TaskMinOrderByAggregateInput
+  _sum?: Prisma.TaskSumOrderByAggregateInput
 }
 
 export type TaskScalarWhereWithAggregatesInput = {
@@ -283,6 +345,8 @@ export type TaskScalarWhereWithAggregatesInput = {
   endTime?: Prisma.DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
   priority?: Prisma.StringWithAggregatesFilter<"Task"> | string
   completed?: Prisma.BoolWithAggregatesFilter<"Task"> | boolean
+  workTimeMinutes?: Prisma.IntNullableWithAggregatesFilter<"Task"> | number | null
+  breakTimeMinutes?: Prisma.IntNullableWithAggregatesFilter<"Task"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Task"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Task"> | Date | string
   userId?: Prisma.StringWithAggregatesFilter<"Task"> | string
@@ -296,6 +360,8 @@ export type TaskCreateInput = {
   endTime?: Date | string | null
   priority?: string
   completed?: boolean
+  workTimeMinutes?: number | null
+  breakTimeMinutes?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutTasksInput
@@ -309,6 +375,8 @@ export type TaskUncheckedCreateInput = {
   endTime?: Date | string | null
   priority?: string
   completed?: boolean
+  workTimeMinutes?: number | null
+  breakTimeMinutes?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   userId: string
@@ -322,6 +390,8 @@ export type TaskUpdateInput = {
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
@@ -335,6 +405,8 @@ export type TaskUncheckedUpdateInput = {
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -348,6 +420,8 @@ export type TaskCreateManyInput = {
   endTime?: Date | string | null
   priority?: string
   completed?: boolean
+  workTimeMinutes?: number | null
+  breakTimeMinutes?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   userId: string
@@ -361,6 +435,8 @@ export type TaskUpdateManyMutationInput = {
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -373,6 +449,8 @@ export type TaskUncheckedUpdateManyInput = {
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -396,9 +474,16 @@ export type TaskCountOrderByAggregateInput = {
   endTime?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   completed?: Prisma.SortOrder
+  workTimeMinutes?: Prisma.SortOrder
+  breakTimeMinutes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+}
+
+export type TaskAvgOrderByAggregateInput = {
+  workTimeMinutes?: Prisma.SortOrder
+  breakTimeMinutes?: Prisma.SortOrder
 }
 
 export type TaskMaxOrderByAggregateInput = {
@@ -409,6 +494,8 @@ export type TaskMaxOrderByAggregateInput = {
   endTime?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   completed?: Prisma.SortOrder
+  workTimeMinutes?: Prisma.SortOrder
+  breakTimeMinutes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -422,9 +509,16 @@ export type TaskMinOrderByAggregateInput = {
   endTime?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   completed?: Prisma.SortOrder
+  workTimeMinutes?: Prisma.SortOrder
+  breakTimeMinutes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+}
+
+export type TaskSumOrderByAggregateInput = {
+  workTimeMinutes?: Prisma.SortOrder
+  breakTimeMinutes?: Prisma.SortOrder
 }
 
 export type TaskCreateNestedManyWithoutUserInput = {
@@ -473,6 +567,14 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type TaskCreateWithoutUserInput = {
   id?: string
   title: string
@@ -481,6 +583,8 @@ export type TaskCreateWithoutUserInput = {
   endTime?: Date | string | null
   priority?: string
   completed?: boolean
+  workTimeMinutes?: number | null
+  breakTimeMinutes?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -493,6 +597,8 @@ export type TaskUncheckedCreateWithoutUserInput = {
   endTime?: Date | string | null
   priority?: string
   completed?: boolean
+  workTimeMinutes?: number | null
+  breakTimeMinutes?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -534,6 +640,8 @@ export type TaskScalarWhereInput = {
   endTime?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   priority?: Prisma.StringFilter<"Task"> | string
   completed?: Prisma.BoolFilter<"Task"> | boolean
+  workTimeMinutes?: Prisma.IntNullableFilter<"Task"> | number | null
+  breakTimeMinutes?: Prisma.IntNullableFilter<"Task"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   userId?: Prisma.StringFilter<"Task"> | string
@@ -547,6 +655,8 @@ export type TaskCreateManyUserInput = {
   endTime?: Date | string | null
   priority?: string
   completed?: boolean
+  workTimeMinutes?: number | null
+  breakTimeMinutes?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -559,6 +669,8 @@ export type TaskUpdateWithoutUserInput = {
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -571,6 +683,8 @@ export type TaskUncheckedUpdateWithoutUserInput = {
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -583,6 +697,8 @@ export type TaskUncheckedUpdateManyWithoutUserInput = {
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   priority?: Prisma.StringFieldUpdateOperationsInput | string
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -597,6 +713,8 @@ export type TaskSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   endTime?: boolean
   priority?: boolean
   completed?: boolean
+  workTimeMinutes?: boolean
+  breakTimeMinutes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
@@ -611,6 +729,8 @@ export type TaskSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   endTime?: boolean
   priority?: boolean
   completed?: boolean
+  workTimeMinutes?: boolean
+  breakTimeMinutes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
@@ -625,6 +745,8 @@ export type TaskSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   endTime?: boolean
   priority?: boolean
   completed?: boolean
+  workTimeMinutes?: boolean
+  breakTimeMinutes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
@@ -639,12 +761,14 @@ export type TaskSelectScalar = {
   endTime?: boolean
   priority?: boolean
   completed?: boolean
+  workTimeMinutes?: boolean
+  breakTimeMinutes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
 }
 
-export type TaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "dueDate" | "startTime" | "endTime" | "priority" | "completed" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["task"]>
+export type TaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "dueDate" | "startTime" | "endTime" | "priority" | "completed" | "workTimeMinutes" | "breakTimeMinutes" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["task"]>
 export type TaskInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -668,6 +792,8 @@ export type $TaskPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     endTime: Date | null
     priority: string
     completed: boolean
+    workTimeMinutes: number | null
+    breakTimeMinutes: number | null
     createdAt: Date
     updatedAt: Date
     userId: string
@@ -1102,6 +1228,8 @@ export interface TaskFieldRefs {
   readonly endTime: Prisma.FieldRef<"Task", 'DateTime'>
   readonly priority: Prisma.FieldRef<"Task", 'String'>
   readonly completed: Prisma.FieldRef<"Task", 'Boolean'>
+  readonly workTimeMinutes: Prisma.FieldRef<"Task", 'Int'>
+  readonly breakTimeMinutes: Prisma.FieldRef<"Task", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Task", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Task", 'DateTime'>
   readonly userId: Prisma.FieldRef<"Task", 'String'>

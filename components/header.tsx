@@ -2,9 +2,16 @@
 
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { useEffect, useState } from "react";
 
 export default function Header() {
-  const now = new Date();
+  const [now, setNow] = useState(() => new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   const formatted = format(now, "EEEE d 'de' MMMM yyyy", { locale: es });
   const capitalized = formatted.replace(/\b\w/g, (c) => c.toUpperCase()).replace(/\bDe\b/g, "de");
   return (

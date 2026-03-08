@@ -200,23 +200,11 @@ export default function EditTaskDialog({ task, trigger }: EditTaskDialogProps) {
                   name="startTime"
                   control={control}
                   render={({ field }) => (
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="bg-background border-input text-foreground focus:border-ring focus:bg-background/80 h-9">
-                        <SelectValue placeholder="Inicio" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-popover border-border max-h-60">
-                        {Array.from({ length: 48 }).map((_, i) => {
-                          const hours = Math.floor(i / 2);
-                          const minutes = i % 2 === 0 ? "00" : "30";
-                          const value = `${hours.toString().padStart(2, "0")}:${minutes}`;
-                          return (
-                            <SelectItem key={value} value={value} className="text-foreground">
-                              {value}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      type="time"
+                      {...field}
+                      className="bg-background border-input text-foreground focus:border-ring focus:bg-background/80 h-9"
+                    />
                   )}
                 />
               </div>
@@ -226,23 +214,11 @@ export default function EditTaskDialog({ task, trigger }: EditTaskDialogProps) {
                   name="endTime"
                   control={control}
                   render={({ field }) => (
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="bg-background border-input text-foreground focus:border-ring focus:bg-background/80 h-9">
-                        <SelectValue placeholder="Fin" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-popover border-border max-h-60">
-                        {Array.from({ length: 48 }).map((_, i) => {
-                          const hours = Math.floor(i / 2);
-                          const minutes = i % 2 === 0 ? "00" : "30";
-                          const value = `${hours.toString().padStart(2, "0")}:${minutes}`;
-                          return (
-                            <SelectItem key={value} value={value} className="text-foreground">
-                              {value}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      type="time"
+                      {...field}
+                      className="bg-background border-input text-foreground focus:border-ring focus:bg-background/80 h-9"
+                    />
                   )}
                 />
               </div>

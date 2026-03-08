@@ -24,10 +24,19 @@ interface PriorityConfig {
 export default function TaskCard({ task }: { task: Task }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [confirmBeforeDelete, setConfirmBeforeDelete] = useState(true);
+  const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
     getDeleteConfirmationSetting().then(setConfirmBeforeDelete);
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const isActive = task.startTime && task.endTime && !task.completed && 
+    now >= new Date(task.startTime) && now <= new Date(task.endTime);
 
   const handleDelete = async () => {
     if (confirmBeforeDelete) {
@@ -77,6 +86,11 @@ export default function TaskCard({ task }: { task: Task }) {
             </p>
             
             <div className="flex flex-wrap items-center gap-2">
+              {isActive && (
+                <Badge variant="default" className="bg-amber-500 hover:bg-amber-600 text-[11px] h-5">
+                  En proceso
+                </Badge>
+              )}
               <Badge variant={priority.variant} className="text-[11px] h-5">
                 {priority.label}
               </Badge>
