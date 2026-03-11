@@ -16,13 +16,15 @@
 # next.js
 /.next/
 /.windsurf/
-/.claude/
-/.agents/
-/.agent/
+/.claude
+/.agents
+/.agent
 /out/
 
 # production
 /build
+
+./AGENTS.md
 
 # misc
 .DS_Store

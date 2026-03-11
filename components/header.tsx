@@ -42,7 +42,9 @@ export default function Header({ activeTasks = [] }: HeaderProps) {
   }, []);
 
   const formatted = format(now, "EEEE d 'de' MMMM yyyy", { locale: es });
-  const capitalized = formatted.replace(/\b\w/g, (c) => c.toUpperCase()).replace(/\bDe\b/g, "de");
+  const dayOnly = formatted.slice(0, formatted.indexOf(" "));
+  const rest = formatted.slice(formatted.indexOf(" "));
+  const capitalized = dayOnly.charAt(0).toUpperCase() + dayOnly.slice(1) + rest;
 
   return (
     <div className="space-y-4">

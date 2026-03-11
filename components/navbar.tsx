@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import { LogOut, Moon, Sun, Settings, Menu } from "lucide-react";
 import Image from "next/image";
+import TipsModal from "@/components/tipsModal";
 
 interface NavbarProps {
   onMenuClick?: () => void;
@@ -63,6 +64,7 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
       </div>
 
       <div className="flex items-center gap-2">
+        <TipsModal />
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button

@@ -19,6 +19,9 @@
 - [] si hay tasks para hoy mostrarlo en una card
 - [] Recomendaciones de productividad con ai, si hay muchas tareas en simultaneo proponer alternativas mas sanas para organizar sus tareas
 - [] Permitir usuarios sin cuenta
+- [] Hacer un arbol de tareas. Las tareas se pueden relacionar entre si, y pertenecer a una tarea mas grande, es decir, ser subtareas de una tarea. Esta propiedad de la tarea se podra seleccionar en los formularios de creacion
+Para una mejor visualizacion de objetivos, se podra ver estas relaciones de tarea en una interfaz para que el usuario vea sus tareas y progresos en las mismas 
+- [] agregar tips de productividad y cuidado de stress
 
 Proximas app
 - [] Study Management

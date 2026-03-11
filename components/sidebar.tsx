@@ -4,8 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { 
-  Calendar, 
-  BarChart3, 
+  Calendar,
   Settings,
   X,
   Timer,
