@@ -62,12 +62,19 @@ export const authOptions: AuthOptions = {
           });
           if (existingUser) {
             token.id = existingUser.id;
+            if (user.image && user.image !== existingUser.image) {
+              await prisma.user.update({
+                where: { id: existingUser.id },
+                data: { image: user.image },
+              });
+            }
           } else {
             const newUser = await prisma.user.create({
               data: {
                 email: user.email,
                 name: user.name || null,
                 password: bcrypt.hashSync(Math.random().toString(36), 10),
+                image: user.image || null,
               },
             });
             token.id = newUser.id;

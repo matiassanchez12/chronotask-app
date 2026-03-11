@@ -1,20 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { LogOut, Moon, Sun, Bell, Settings } from "lucide-react";
+import { LogOut, Moon, Sun, Settings, Menu } from "lucide-react";
 import Image from "next/image";
 
-export default function Navbar() {
+interface NavbarProps {
+  onMenuClick?: () => void;
+}
+
+export default function Navbar({ onMenuClick }: NavbarProps) {
   const { data: session } = useSession();
   const [open, setOpen] = useState(false);
+  const [userImage, setUserImage] = useState<string | null>(null);
   const { theme, setTheme } = useTheme();
-  const notificationCount = 3;
+
+  useEffect(() => {
+    async function fetchUserImage() {
+      try {
+        const res = await fetch("/api/user/image");
+        if (res.ok) {
+          const data = await res.json();
+          setUserImage(data.image);
+        }
+      } catch (e) {
+        console.error("Failed to fetch user image:", e);
+      }
+    }
+    if (session?.user) {
+      fetchUserImage();
+    }
+  }, [session]);
 
   const userInitials = session?.user?.name
     ? session.user.name
@@ -31,42 +51,35 @@ export default function Navbar() {
 
   return (
     <nav className="h-14 border-b border-border flex items-center justify-between px-4 bg-background">
-      <Link href="/admin" className="flex items-center gap-2">
-        <Image
-          src="/logo.svg"
-          alt="Tododoro"
-          width={68}
-          height={68}
-          className={`object-contain ${theme === "dark" ? "invert brightness-90" : ""}`}
-        />
-        <span className="font-semibold text-lg">Tododoro</span>
-      </Link>
-
       <div className="flex items-center gap-2">
         <Button
           variant="ghost"
           size="icon"
-          className="relative"
-          aria-label="Notificaciones"
+          className="lg:hidden h-9 w-9"
+          onClick={onMenuClick}
         >
-          <Bell className="h-5 w-5" />
-          {notificationCount > 0 && (
-            <Badge
-              className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-[10px] bg-destructive text-destructive-foreground"
-            >
-              {notificationCount}
-            </Badge>
-          )}
+          <Menu className="h-5 w-5" />
         </Button>
+      </div>
 
+      <div className="flex items-center gap-2">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button
               variant="ghost"
-              className="h-9 w-9 rounded-full bg-muted hover:bg-muted/80 p-0 flex items-center justify-center relative"
+              className="h-9 w-9 rounded-full bg-muted hover:bg-muted/80 p-0 flex items-center justify-center relative overflow-hidden"
               aria-label="Menú de usuario"
             >
-              <span className="text-sm font-medium">{userInitials}</span>
+              {userImage ? (
+                <Image
+                  src={userImage}
+                  alt={session?.user?.name || "Usuario"}
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <span className="text-sm font-medium">{userInitials}</span>
+              )}
             </Button>
           </PopoverTrigger>
           <PopoverContent align="end" className="w-56">
@@ -93,13 +106,6 @@ export default function Navbar() {
                 </span>
                 {theme === "dark" ? "Modo claro" : "Modo oscuro"}
               </Button>
-
-              <Link href="/settings">
-                <Button variant="outline" className="w-full justify-start gap-2">
-                  <Settings className="h-4 w-4" />
-                  Configuración
-                </Button>
-              </Link>
 
               <Button
                 variant="outline"

@@ -1,32 +1,35 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import {
   getUserSettings,
   updatePomodoroSettings,
   updateDeleteConfirmation,
-  updateFontSize,
   deleteUserAccount,
 } from "@/app/actions/settings";
-import { signOut } from "next-auth/react";
-import { Settings, Timer, Trash2, AlertTriangle, Loader2, Type } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
+import { Settings, Timer, Trash2, AlertTriangle, Loader2, User, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Modal } from "@/components/ui/modal";
+import Image from "next/image";
 
 export default function SettingsPage() {
+  const { data: session, update: updateSession } = useSession();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
+  const [userImage, setUserImage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [pomodoro, setPomodoro] = useState(25);
   const [shortBreak, setShortBreak] = useState(5);
   const [longBreak, setLongBreak] = useState(15);
   const [confirmBeforeDelete, setConfirmBeforeDelete] = useState(true);
-  const [fontSize, setFontSize] = useState(16);
 
   const [settingsLoaded, setSettingsLoaded] = useState(false);
 
@@ -39,13 +42,56 @@ export default function SettingsPage() {
         setShortBreak(settings.shortBreakDuration);
         setLongBreak(settings.longBreakDuration);
         setConfirmBeforeDelete(settings.confirmBeforeDelete);
-        setFontSize(settings.fontSize);
         setSettingsLoaded(true);
       }
       setLoading(false);
     }
     loadSettings();
   }, [settingsLoaded]);
+
+  useEffect(() => {
+    async function fetchUserImage() {
+      try {
+        const res = await fetch("/api/user/image");
+        if (res.ok) {
+          const data = await res.json();
+          setUserImage(data.image);
+        }
+      } catch (e) {
+        console.error("Failed to fetch user image:", e);
+      }
+    }
+    fetchUserImage();
+  }, []);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const res = await fetch("/api/user/profile", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setUserImage(data.image);
+        await updateSession();
+        toast.success("Imagen de perfil actualizada");
+      } else {
+        toast.error("Error al subir imagen");
+      }
+    } catch (e) {
+      toast.error("Error al subir imagen");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handlePomodoroSave = async () => {
     setSaving(true);
@@ -61,16 +107,6 @@ export default function SettingsPage() {
   const handleConfirmChange = async (value: boolean) => {
     setConfirmBeforeDelete(value);
     const result = await updateDeleteConfirmation(value);
-    if (result.success) {
-      toast.success("Configuración guardada");
-    } else {
-      toast.error(result.error);
-    }
-  };
-
-  const handleFontSizeChange = async (value: number) => {
-    setFontSize(value);
-    const result = await updateFontSize(value);
     if (result.success) {
       toast.success("Configuración guardada");
     } else {
@@ -98,18 +134,75 @@ export default function SettingsPage() {
 
   return (
     <div
-      className="max-w-2xl mx-auto p-6 space-y-6 overflow-y-auto max-h-[calc(100vh-3.5rem)] [&::-webkit-scrollbar]:hidden"
+      className="p-6 pb-8 space-y-10 min-h-screen [&::-webkit-scrollbar]:hidden"
       style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
     >
-      <div className="flex items-center gap-3 mb-8">
-        <Settings className="h-8 w-8" />
-        <h1 className="text-2xl font-bold">Configuración</h1>
+      <div className="flex items-center gap-3">
+        <Settings className="h-8 w-8 text-cyan-500" />
+        <h1 className="text-3xl font-bold">Configuración</h1>
       </div>
 
-      <Card>
+      <Card className="rounded-xl border border-white/10 bg-white/5 backdrop-blur">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Timer className="h-5 w-5" />
+            <User className="h-5 w-5 text-cyan-500" />
+            Perfil
+          </CardTitle>
+          <CardDescription>
+            Tu imagen de perfil y información de cuenta
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center gap-6">
+            <div className="relative h-24 w-24 rounded-full overflow-hidden bg-muted shrink-0">
+              {userImage ? (
+                <Image
+                  src={userImage}
+                  alt="Foto de perfil"
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <div className="h-full w-full flex items-center justify-center">
+                  <User className="h-10 w-10 text-muted-foreground" />
+                </div>
+              )}
+            </div>
+            <div className="flex-1 space-y-2">
+              <div>
+                <p className="font-medium">{session?.user?.name || "Usuario"}</p>
+                <p className="text-sm text-muted-foreground">{session?.user?.email}</p>
+              </div>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageUpload}
+                accept="image/*"
+                className="hidden"
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                className="gap-2"
+              >
+                {uploading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Upload className="h-4 w-4" />
+                )}
+                {uploading ? "Subiendo..." : "Cambiar foto"}
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="rounded-xl border border-white/10 bg-white/5 backdrop-blur">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Timer className="h-5 w-5 text-cyan-500" />
             Pomodoro
           </CardTitle>
           <CardDescription>
@@ -152,55 +245,16 @@ export default function SettingsPage() {
               />
             </div>
           </div>
-          <Button onClick={handlePomodoroSave} disabled={saving}>
+          <Button onClick={handlePomodoroSave} disabled={saving} className="bg-cyan-500 hover:bg-cyan-600">
             {saving ? "Guardando..." : "Guardar"}
           </Button>
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="rounded-xl border border-white/10 bg-white/5 backdrop-blur">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Type className="h-5 w-5" />
-            Apariencia
-          </CardTitle>
-          <CardDescription>
-            Configura el tamaño de fuente de la aplicación
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="fontSize">Tamaño de fuente</Label>
-              <div className="flex items-center gap-4">
-                <Input
-                  id="fontSize"
-                  type="number"
-                  min={12}
-                  max={24}
-                  value={fontSize}
-                  onChange={(e) => setFontSize(Number(e.target.value))}
-                  className="w-24"
-                />
-                <Button onClick={() => handleFontSizeChange(fontSize)} disabled={saving}>
-                  {saving ? "Guardando..." : "Guardar"}
-                </Button>
-              </div>
-            </div>
-            <div
-              className="p-4 border rounded-md bg-muted/30"
-              style={{ fontSize: `${fontSize}px` }}
-            >
-              Vista previa del texto
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Trash2 className="h-5 w-5" />
+            <Trash2 className="h-5 w-5 text-cyan-500" />
             Eliminar tareas
           </CardTitle>
           <CardDescription>
@@ -222,6 +276,7 @@ export default function SettingsPage() {
                 variant={confirmBeforeDelete ? "default" : "secondary"}
                 size="sm"
                 onClick={() => handleConfirmChange(true)}
+                className={confirmBeforeDelete ? "bg-cyan-500 hover:bg-cyan-600" : ""}
               >
                 Sí
               </Button>
@@ -229,6 +284,7 @@ export default function SettingsPage() {
                 variant={!confirmBeforeDelete ? "default" : "secondary"}
                 size="sm"
                 onClick={() => handleConfirmChange(false)}
+                className={!confirmBeforeDelete ? "bg-cyan-500 hover:bg-cyan-600" : ""}
               >
                 No
               </Button>
@@ -237,7 +293,7 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Card className="border-destructive/50">
+      <Card className="border-destructive/50 rounded-xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-destructive">
             <AlertTriangle className="h-5 w-5" />

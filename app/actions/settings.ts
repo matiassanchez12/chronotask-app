@@ -169,3 +169,24 @@ export async function updateFontSize(fontSize: number): Promise<ActionResult> {
     };
   }
 }
+
+export async function getUserProfile() {
+  try {
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.id;
+
+    if (!userId) {
+      return null;
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { image: true, name: true, email: true },
+    });
+
+    return user;
+  } catch (e) {
+    console.error("getUserProfile:", e);
+    return null;
+  }
+}

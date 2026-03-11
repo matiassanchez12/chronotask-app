@@ -17,6 +17,7 @@ model User {
   email     String   @unique
   name      String?
   password  String
+  image     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   tasks     Task[]
@@ -44,6 +45,7 @@ model Task {
   completed       Boolean   @default(false)
   workTimeMinutes Int?      @default(0)
   breakTimeMinutes Int?     @default(0)
+  usePomodoro     Boolean   @default(true)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   userId          String

@@ -179,6 +179,14 @@ Configured in `tsconfig.json`:
 - Uses Next.js 16.1.6 with React 19
 - Main page: `app/admin/page.tsx`
 
+## New Components
+
+| File | Purpose |
+|------|---------|
+| `components/sidebar.tsx` | Left sidebar navigation (240px) with Hoy, Tareas, Estadísticas, Configuración |
+| `components/statsCards.tsx` | Grid of 3 statistics cards with hardcoded data |
+| `components/floatingActionButton.tsx` | Fixed FAB for creating tasks (cyan, bottom-right) |
+
 ## Database Models (Prisma Schema)
 
 ### User
@@ -316,3 +324,27 @@ User settings are stored in `UserSettings` model:
 - Added `workTimeMinutes` and `breakTimeMinutes` fields to Task model
 - Migration applied: `20260308183704_add_work_break_times`
 - `completeTask` action now accepts optional `workTimeMinutes` and `breakTimeMinutes` parameters
+
+### Dashboard Redesign
+- Created new dashboard layout with sidebar (240px)
+- Added sidebar navigation with icons (Hoy, Tareas, Estadísticas, Configuración)
+- Created StatsCards component with 3 cards (hardcoded data)
+- Created FloatingActionButton for creating tasks
+- Improved header with larger title and cyan time display
+- Added cyan accent color throughout dashboard
+- Stats cards visible only in todo mode
+
+### Counter Improvements
+- Replaced PlayCircle icon with Laptop icon for work phase
+- Fixed progress bars: each bar now has two segments (work + break)
+- Work: blue segment, Break: green segment
+- Active phase shows pulse animation
+- Fixed bar indexing logic: uses Math.floor(currentPomodoroIndex / 2)
+- Added manual timer using secondsInCurrentPhase instead of system time
+- Advance button adds remaining time to accumulated and moves to next pomodoro
+- Each task has independent timer state
+
+### Font Size
+- Applied user fontSize setting to main content area
+- Uses CSS custom property --user-font-size
+- Configured in app/admin/layout.tsx and globals.css

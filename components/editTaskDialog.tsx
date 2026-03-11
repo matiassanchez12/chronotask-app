@@ -9,13 +9,14 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Flag, Clock } from "lucide-react";
+import { Flag, Clock, Timer } from "lucide-react";
 import { Modal } from "@/components/ui/modal";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { PopoverTrigger, Popover, PopoverContent } from "./ui/popover";
 import { Calendar } from "./ui/calendar";
+import { Switch } from "./ui/switch";
 import { Task } from "@/generated/prisma/client";
 
 interface EditTaskDialogProps {
@@ -33,6 +34,7 @@ const editTaskSchema = z
     startTime: z.string().optional(),
     endTime: z.string().optional(),
     priority: z.enum(["low", "medium", "high"]),
+    usePomodoro: z.boolean(),
   })
   .refine((data) => data.dueDate !== undefined, {
     message: "La fecha límite es requerida",
@@ -67,6 +69,7 @@ export default function EditTaskDialog({ task, trigger }: EditTaskDialogProps) {
       startTime: task.startTime ? format(new Date(task.startTime), "HH:mm") : "",
       endTime: task.endTime ? format(new Date(task.endTime), "HH:mm") : "",
       priority: task.priority as "low" | "medium" | "high",
+      usePomodoro: task.usePomodoro ?? true,
     },
   });
 
@@ -78,6 +81,7 @@ export default function EditTaskDialog({ task, trigger }: EditTaskDialogProps) {
       startTime: task.startTime ? format(new Date(task.startTime), "HH:mm") : "",
       endTime: task.endTime ? format(new Date(task.endTime), "HH:mm") : "",
       priority: task.priority as "low" | "medium" | "high",
+      usePomodoro: task.usePomodoro ?? true,
     });
   };
 
@@ -94,6 +98,7 @@ export default function EditTaskDialog({ task, trigger }: EditTaskDialogProps) {
     formData.set("title", data.title);
     formData.set("dueDate", data.dueDate.toISOString());
     formData.set("priority", data.priority);
+    formData.set("usePomodoro", data.usePomodoro.toString());
 
     if (data.startTime) {
       const startDateTime = new Date(data.dueDate);
@@ -111,7 +116,7 @@ export default function EditTaskDialog({ task, trigger }: EditTaskDialogProps) {
 
     const result = await updateTask(task.id, formData);
     if (result.success) {
-      toast.success("Task updated");
+      toast.success("Tarea actualizada correctamente");
       handleClose();
     } else {
       toast.error(result.error);
@@ -266,6 +271,24 @@ export default function EditTaskDialog({ task, trigger }: EditTaskDialogProps) {
               )}
             />
           </div>
+
+          {/* Pomodoro Switch */}
+          <Controller
+            name="usePomodoro"
+            control={control}
+            render={({ field }) => (
+              <div className="flex items-center justify-between p-3 bg-secondary/30 rounded-lg border border-border/50">
+                <Label className="text-sm font-medium text-foreground flex items-center gap-2 cursor-pointer">
+                  <Timer className="h-4 w-4 text-muted-foreground" />
+                  Técnica Pomodoro
+                </Label>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </div>
+            )}
+          />
 
           {/* Submit Button */}
           <Button

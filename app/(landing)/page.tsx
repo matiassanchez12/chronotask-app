@@ -1,14 +1,21 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Clock, Target, Zap } from "lucide-react";
+import Image from "next/image";
 
 export default function Landing() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <nav className="border-b border-border/40">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-primary">
-            Tododoro
+          <Link href="/" className="font-bold text-primary">
+            <Image
+              src="/logo.svg"
+              alt="ChonoTask"
+              width={220}
+              height={220}
+              className="object-contain dark:invert dark:brightness-90"
+            />
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/sign-in">
@@ -50,7 +57,7 @@ export default function Landing() {
         <section className="py-20 px-6 bg-muted/30">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-12">
-              ¿Por qué usar Tododoro?
+              ¿Por qué usar ChonoTask?
             </h2>
             <div className="grid md:grid-cols-4 gap-8">
               <div className="text-center space-y-4">
@@ -112,7 +119,7 @@ export default function Landing() {
 
       <footer className="border-t border-border/40 py-8 px-6">
         <div className="max-w-6xl mx-auto text-center text-muted-foreground">
-          <p>© 2026 Tododoro. Todos los derechos reservados.</p>
+          <p>© 2026 ChonoTask. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>

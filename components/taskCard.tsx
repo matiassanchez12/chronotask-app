@@ -2,15 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { toggleTask } from "@/app/actions/toggleTask";
-import { deleteTask } from "@/app/actions/deleteTask";
-import { getDeleteConfirmationSetting } from "@/app/actions/settings";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { Check, Trash2, Calendar, Clock } from "lucide-react";
+import { Check, Calendar, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { DeleteTaskModal } from "@/components/deleteTaskModal";
 import EditTaskDialog from "@/components/editTaskDialog";
 import { Task } from "@/generated/prisma/client";
 
@@ -22,32 +19,22 @@ interface PriorityConfig {
 }
 
 export default function TaskCard({ task }: { task: Task }) {
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [confirmBeforeDelete, setConfirmBeforeDelete] = useState(true);
   const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
-    getDeleteConfirmationSetting().then(setConfirmBeforeDelete);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => setNow(new Date()), 1000);
+    const interval = setInterval(() => setNow(new Date()), 5000);
     return () => clearInterval(interval);
   }, []);
 
   const isActive = task.startTime && task.endTime && !task.completed && 
     now >= new Date(task.startTime) && now <= new Date(task.endTime);
 
-  const handleDelete = async () => {
-    if (confirmBeforeDelete) {
-      setShowDeleteModal(true);
+  const handleToggle = async () => {
+    const result = await toggleTask(task.id);
+    if (result.success) {
+      toast.success("Tarea actualizada");
     } else {
-      const result = await deleteTask(task.id);
-      if (result.success) {
-        toast.success("Tarea eliminada");
-      } else {
-        toast.error(result.error);
-      }
+      toast.error(result.error);
     }
   };
 
@@ -58,15 +45,6 @@ export default function TaskCard({ task }: { task: Task }) {
   };
 
   const priority = priorityConfig[task.priority] || priorityConfig.medium;
-
-  const handleToggle = async () => {
-    const result = await toggleTask(task.id);
-    if (result.success) {
-      toast.success("Task updated");
-    } else {
-      toast.error(result.error);
-    }
-  };
 
   const cardContent = (
     <div className="flex bg-card rounded-xl overflow-hidden border border-border/60 hover:border-border hover:shadow-sm transition-all duration-200 group">
@@ -97,7 +75,7 @@ export default function TaskCard({ task }: { task: Task }) {
             </div>
           </div>
 
-          <div className="flex gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
+          <div onClick={(e) => e.stopPropagation()}>
             <Button
               type="button"
               size="icon"
@@ -106,16 +84,6 @@ export default function TaskCard({ task }: { task: Task }) {
               onClick={handleToggle}
             >
               <Check className="h-4 w-4" />
-            </Button>
-
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              className="h-8 w-8 text-muted-foreground hover:text-destructive"
-              onClick={handleDelete}
-            >
-              <Trash2 className="h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -143,15 +111,5 @@ export default function TaskCard({ task }: { task: Task }) {
     </div>
   );
 
-  return (
-    <>
-      <EditTaskDialog task={task} trigger={cardContent} />
-      <DeleteTaskModal
-        taskId={task.id}
-        taskTitle={task.title}
-        isOpen={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
-      />
-    </>
-  );
+  return <EditTaskDialog task={task} trigger={cardContent} />;
 }

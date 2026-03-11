@@ -20,6 +20,7 @@ export async function createTask(formData: FormData): Promise<ActionResult> {
     const priority = (formData.get("priority") as string) || "medium";
     const startTime = formData.get("startTime") as string;
     const endTime = formData.get("endTime") as string;
+    const usePomodoro = formData.get("usePomodoro") as string;
 
     if (!title?.trim()) return { success: false, error: "Title is required" };
     if (!dueDate) return { success: false, error: "Due date is required" };
@@ -31,6 +32,7 @@ export async function createTask(formData: FormData): Promise<ActionResult> {
         priority,
         startTime: startTime ? new Date(startTime) : null,
         endTime: endTime ? new Date(endTime) : null,
+        usePomodoro: usePomodoro !== "false",
         userId,
       },
     });

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -61,6 +62,16 @@ export default function SignUpPage() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
+          <div className="flex justify-center mb-2">
+            <Image
+              src="/logo.svg"
+              alt="ChonoTask"
+              width={188}
+              height={188}
+              className="object-contain dark:invert dark:brightness-90"
+
+            />
+          </div>
           <CardTitle className="text-2xl font-bold">Crear cuenta</CardTitle>
           <CardDescription>Ingresa tus datos para registrarte</CardDescription>
         </CardHeader>

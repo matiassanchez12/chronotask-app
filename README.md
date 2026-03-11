@@ -1,4 +1,4 @@
-# tododoro
+# ChonoTask
 
 ## Next js FE
 ## Server Actions BE
@@ -15,7 +15,14 @@
 - [x] Desarrollar los primeros componentes UI con Shadcn
 - [x] Configurar entorno de desarrollo local
 - [x] Definir la arquitectura de carpetas del proyecto
+- [] una tarea puede definir si tiene o no el contador pomodoro activado 
+- [] si hay tasks para hoy mostrarlo en una card
+- [] Recomendaciones de productividad con ai, si hay muchas tareas en simultaneo proponer alternativas mas sanas para organizar sus tareas
+- [] Permitir usuarios sin cuenta
 
+Proximas app
+- [] Study Management
+- [] Restaurant Menu App
 ---
 
 ## Roadmap / Próximos features
@@ -36,6 +43,7 @@ Orden sugerido por dependencias y valor. Ajusta prioridad (P1 = urgente, P2 = im
 | P3 | Que tiene la app de pomodoro? si bien va a tener un contador con el tiempo que se le lleva dedicando a la tarea actual, eso no es pomodoro. 
 Para que se use el concepto de pomodoro, la app tendria que aplicar un contador que se ejecute cada cierto tiempo y sirva como una pausa de descanso. 
 Ese cierto tiempo sera configurable por el usuario. Y cuando la tarea se este ejecutando el usuario tendra la posibilidad de elegir que el modo pomodoro se active o no|
+
 
 
 **Cómo usar este roadmap**

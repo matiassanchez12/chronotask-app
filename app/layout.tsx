@@ -16,14 +16,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Tododoro - A simple and effective task manager",
-  description: "Tododoro is a simple and effective task manager that helps you organize your work and get things done.",
+  title: "ChonoTask - A simple and effective task manager",
+  description: "ChonoTask is a simple and effective task manager that helps you organize your work and get things done.",
   icons: {
     icon: "/favicon.ico",
   },
   openGraph: {
-    title: "Tododoro - A simple and effective task manager",
-    description: "Tododoro is a simple and effective task manager that helps you organize your work and get things done.",
+    title: "ChonoTask - A simple and effective task manager",
+    description: "ChonoTask is a simple and effective task manager that helps you organize your work and get things done.",
   },
 };
 

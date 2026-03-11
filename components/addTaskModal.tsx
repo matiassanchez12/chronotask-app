@@ -9,13 +9,14 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Flag, Plus, Clock } from "lucide-react";
+import { Flag, Plus, Clock, Timer } from "lucide-react";
 import { Modal } from "@/components/ui/modal";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { PopoverTrigger, Popover, PopoverContent } from "./ui/popover";
 import { Calendar } from "./ui/calendar";
+import { Switch } from "./ui/switch";
 
 const addTaskSchema = z
   .object({
@@ -27,6 +28,7 @@ const addTaskSchema = z
     startTime: z.string().optional(),
     endTime: z.string().optional(),
     priority: z.enum(["low", "medium", "high"]),
+    usePomodoro: z.boolean(),
   })
   .refine((data) => data.dueDate !== undefined, {
     message: "La fecha límite es requerida",
@@ -71,12 +73,13 @@ export default function AddTaskModal() {
       startTime: "",
       endTime: "",
       priority: "medium",
+      usePomodoro: true,
     },
   });
 
   const handleClose = () => {
     setIsOpen(false);
-    reset({ title: "", dueDate: new Date(), startTime: "", endTime: "", priority: "medium" });
+    reset({ title: "", dueDate: new Date(), startTime: "", endTime: "", priority: "medium", usePomodoro: true });
   };
 
   const onSubmit = async (data: AddTaskFormData) => {
@@ -87,6 +90,7 @@ export default function AddTaskModal() {
     formData.set("title", data.title);
     formData.set("dueDate", data.dueDate.toISOString());
     formData.set("priority", data.priority);
+    formData.set("usePomodoro", data.usePomodoro.toString());
     
     if (data.startTime) {
       const startDateTime = new Date(data.dueDate);
@@ -115,12 +119,13 @@ export default function AddTaskModal() {
     <>
       {/* Floating Button */}
       <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-8 right-8 z-40 bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-3 px-4 rounded-full transition-all hover:shadow-lg shadow-md flex items-center gap-2"
-      >
-        <Plus className="h-5 w-5" />
-        <span className="hidden sm:inline">Nueva Tarea</span>
-      </button>
+      onClick={() => {
+        setIsOpen(true);
+      }}
+      className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
+    >
+      <Plus className="h-6 w-6" />
+    </button>
 
       {/* Modal */}
       <Modal isOpen={isOpen} onClose={handleClose} title="Nueva Tarea">
@@ -267,6 +272,24 @@ export default function AddTaskModal() {
               )}
             />
           </div>
+
+          {/* Pomodoro Switch */}
+          <Controller
+            name="usePomodoro"
+            control={control}
+            render={({ field }) => (
+              <div className="flex items-center justify-between p-3 bg-secondary/30 rounded-lg border border-border/50">
+                <Label className="text-sm font-medium text-foreground flex items-center gap-2 cursor-pointer">
+                  <Timer className="h-4 w-4 text-muted-foreground" />
+                  Técnica Pomodoro
+                </Label>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </div>
+            )}
+          />
 
           {/* Submit Button */}
           <Button

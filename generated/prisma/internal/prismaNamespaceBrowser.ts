@@ -77,6 +77,7 @@ export const UserScalarFieldEnum = {
   email: 'email',
   name: 'name',
   password: 'password',
+  image: 'image',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -107,6 +108,7 @@ export const TaskScalarFieldEnum = {
   completed: 'completed',
   workTimeMinutes: 'workTimeMinutes',
   breakTimeMinutes: 'breakTimeMinutes',
+  usePomodoro: 'usePomodoro',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   userId: 'userId'

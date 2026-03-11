@@ -1,5 +1,4 @@
-import AddTaskModal from "@/components/addTaskModal";
-import Navbar from "@/components/navbar";
+import AdminLayoutClient from "@/components/adminLayoutClient";
 import { getUserSettings } from "@/app/actions/settings";
 
 export const dynamic = "force-dynamic";
@@ -13,12 +12,8 @@ export default async function AdminLayout({
   const fontSize = settings?.fontSize || 16;
 
   return (
-    <>
-      <Navbar />
-      <AddTaskModal />
-      <main style={{ "--font-size": `${fontSize}px` } as React.CSSProperties} className="[font-size:var(--font-size)]">
-        {children}
-      </main>
-    </>
+    <div style={{ fontSize: `${fontSize}px` }}>
+      <AdminLayoutClient>{children}</AdminLayoutClient>
+    </div>
   );
 }
