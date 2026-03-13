@@ -128,6 +128,10 @@ export default function AddTaskModal() {
       saveLocalTask(taskData);
       toast.success("Tarea creada");
       handleClose();
+      // recargar pagina
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
      }
   };
 

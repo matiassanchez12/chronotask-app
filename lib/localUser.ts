@@ -27,13 +27,15 @@ export function createLocalTaskData(
   usePomodoro: boolean,
   startTime?: string,
   endTime?: string
-): Omit<LocalTask, "id" | "completed" | "workTimeMinutes" | "breakTimeMinutes" | "createdAt" | "updatedAt"> {
+): Omit<LocalTask, "completed" | "workTimeMinutes" | "breakTimeMinutes" | "createdAt" | "updatedAt"> {
   const task: any = {
     title,
     dueDate: dueDate.toISOString(),
     priority,
     startTime: null,
     endTime: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
   if (startTime) {
@@ -49,8 +51,8 @@ export function createLocalTaskData(
     date.setHours(parseInt(h), parseInt(m), 0, 0);
     task.endTime = date.toISOString();
   }
-
-  return task;
+  const randomId = Math.random().toString(36).substr(2, 9);
+  return {...task, id: `local-${randomId}` };
 }
 
 export function saveLocalTask(task: Omit<LocalTask, "id" | "completed" | "workTimeMinutes" | "breakTimeMinutes" | "createdAt" | "updatedAt">): LocalTask {

@@ -31,7 +31,7 @@ function findTodayTasks(tasks: Task[]) {
       const dueDate = new Date(task.dueDate);
       const now = new Date();
 
-      return getFormatedDate(dueDate) === getFormatedDate(now);
+      return (getFormatedDate(dueDate) === getFormatedDate(now)) && !task.completed;
     })
 }
 
@@ -58,7 +58,7 @@ export default function Header({ tasks = [] }: HeaderProps) {
 
   const activeTasks = findActiveTasks(tasks);
   const todayTasks = findTodayTasks(tasks);
-  console.log(todayTasks)
+
   useEffect(() => {
     const interval = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(interval);

@@ -142,6 +142,9 @@ export default function EditTaskDialog({ task, trigger }: EditTaskDialogProps) {
       updateLocalTask(task.id, updates);
       toast.success("Tarea actualizada");
       handleClose();
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     } else {
       const result = await updateTask(task.id, formData);
       if (result.success) {
