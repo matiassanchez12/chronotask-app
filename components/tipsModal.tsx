@@ -122,47 +122,51 @@ export default function TipsModal() {
           <Lightbulb className="h-5 w-5" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Lightbulb className="h-5 w-5 text-amber-500" />
-            {tip.title}
-          </DialogTitle>
-        </DialogHeader>
-        <div className="space-y-3 py-4">
-          {tip.content.map((item, index) => (
-            <div key={index} className="flex justify-between items-center">
-              <span className={item.value ? "font-medium" : "font-medium text-muted-foreground"}>
-                {item.label}
-              </span>
-              {item.value && (
-                <span className="text-sm text-muted-foreground">{item.value}</span>
-              )}
+      <DialogContent className="max-w-full h-[80vh] rounded-none p-0">
+        <div className="flex flex-col h-full w-full">
+          <DialogHeader className="p-4 border-b shrink-0">
+            <DialogTitle className="flex items-center gap-2">
+              <Lightbulb className="h-5 w-5 text-amber-500" />
+              {tip.title}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 overflow-auto p-4">
+            <div className="space-y-3">
+              {tip.content.map((item, index) => (
+                <div key={index} className="flex justify-between items-center">
+                  <span className={item.value ? "font-medium" : "font-medium text-muted-foreground"}>
+                    {item.label}
+                  </span>
+                  {item.value && (
+                    <span className="text-sm text-muted-foreground">{item.value}</span>
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        <div className="flex items-center justify-between pt-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handlePrev}
-            className="gap-1"
-          >
-            <ChevronLeft className="h-4 w-4" />
-            Anterior
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            {currentTip + 1}/{tips.length}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleNext}
-            className="gap-1"
-          >
-            Siguiente
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+          </div>
+          <div className="flex items-center justify-between p-4 border-t shrink-0">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePrev}
+              className="gap-1"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Anterior
+            </Button>
+            <span className="text-sm text-muted-foreground">
+              {currentTip + 1}/{tips.length}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleNext}
+              className="gap-1"
+            >
+              Siguiente
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

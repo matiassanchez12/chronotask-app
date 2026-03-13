@@ -1,34 +1,27 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { useRouter } from "next/navigation";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface FiltersProps {
-  basePath?: string;
+  activeFilter?: string;
+  onFilterChange?: (filter: string) => void;
 }
 
-export default function ManageFilters({ basePath = "/admin/manage" }: FiltersProps) {
-  const router = useRouter();
-  const params = useSearchParams();
-  const active = params.get("filter") || "all";
-
+export default function ManageFilters({ activeFilter = "all", onFilterChange }: FiltersProps) {
   const handleFilterChange = (value: string) => {
-    router.push(`${basePath}?filter=${value}`);
+    if (onFilterChange) {
+      onFilterChange(value);
+    }
   };
 
   return (
-    <Tabs value={active} onValueChange={handleFilterChange}>
+    <Tabs value={activeFilter} onValueChange={handleFilterChange}>
       <TabsList className="bg-card border border-border">
         <TabsTrigger value="all" className="data-[state=inactive]:text-muted-foreground cursor-pointer">Todas</TabsTrigger>
         <TabsTrigger value="today" className="data-[state=inactive]:text-muted-foreground cursor-pointer">Hoy</TabsTrigger>
         <TabsTrigger value="week" className="data-[state=inactive]:text-muted-foreground cursor-pointer">Esta semana</TabsTrigger>
         <TabsTrigger value="overdue" className="data-[state=inactive]:text-muted-foreground cursor-pointer">Vencidas</TabsTrigger>
       </TabsList>
-      <TabsContent value="all" />
-      <TabsContent value="today" />
-      <TabsContent value="week" />
-      <TabsContent value="overdue" />
     </Tabs>
   );
 }

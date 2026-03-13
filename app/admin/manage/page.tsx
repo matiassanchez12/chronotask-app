@@ -1,52 +1,52 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import ManageTasks from "@/components/manageTasks";
-import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
 import AddTaskModal from "@/components/addTaskModal";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import ManageFilters from "@/components/filters";
+import { getLocalTasks, LocalTask } from "@/lib/localUser";
+import { useSession } from "next-auth/react";
+import { Task } from "@/generated/prisma/client";
 
-interface ManagePageProps {
-  searchParams: Promise<{ filter?: string }>;
-}
-
-export default async function ManagePage({ searchParams }: ManagePageProps) {
-  const params = await searchParams;
-  const filter = params?.filter || "all";
-
-  const session = await getServerSession();
-  const userId = session?.user?.id;
-
-  const allTasks = await prisma.task.findMany({
-    where: {
-      userId: userId,
-    },
-    orderBy: { dueDate: "desc" },
-  });
-
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const weekEnd = new Date(today);
-  weekEnd.setDate(weekEnd.getDate() + 7);
-
-  const filteredTasks = allTasks.filter((task) => {
-    const dueDate = new Date(task.dueDate);
-
-    switch (filter) {
-      case "pending":
-        return !task.completed;
-      case "completed":
-        return task.completed;
-      case "today":
-        return dueDate >= today && dueDate < tomorrow;
-      case "week":
-        return dueDate >= today && dueDate <= weekEnd;
-      default:
-        return true;
+export default function ManagePage() {
+  const { data: session } = useSession();
+  const [tasks, setTasks] = useState<Task[] | LocalTask[]>([]);
+  const [loading, setLoading] = useState(true);
+  // hacer ssr con server actions denuevo las request para que quede mas prolijo el codigo y que sea mas rapida la carga de los paginas
+  useEffect(() => {
+    if (session) {
+      fetch("/api/tasks")
+        .then((res) => res.json())
+        .then((data) => {
+          setTasks(data.tasks || []);
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    } else {
+      setTasks(getLocalTasks());
+      setLoading(false);
     }
-  });
+  }, [session]);
+
+  if (loading) {
+    return (
+      <>
+        <AddTaskModal />
+        <div className="space-y-6">
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 bg-muted rounded w-48"></div>
+            <div className="h-4 bg-muted rounded w-64"></div>
+          </div>
+          <div className="space-y-3">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-20 bg-muted rounded-lg animate-pulse"></div>
+            ))}
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -65,8 +65,7 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
             <p className="text-muted-foreground mt-1">Edita o elimina tus tareas</p>
           </div>
         </div>
-        <ManageFilters />
-        <ManageTasks tasks={filteredTasks} />
+        <ManageTasks tasks={tasks} />
       </div>
     </>
   );

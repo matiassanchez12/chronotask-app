@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { toggleTask } from "@/app/actions/toggleTask";
-import { deleteTask } from "@/app/actions/deleteTask";
+import { useState, useEffect, useMemo } from "react";
+import { toggleTask as serverToggleTask } from "@/app/actions/toggleTask";
+import { deleteTask as serverDeleteTask } from "@/app/actions/deleteTask";
 import { getDeleteConfirmationSetting } from "@/app/actions/settings";
+import { toggleLocalTask, deleteLocalTask } from "@/lib/localUser";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -14,7 +15,9 @@ import { DeleteTaskModal } from "@/components/deleteTaskModal";
 import EditTaskDialog from "@/components/editTaskDialog";
 import { Task } from "@/generated/prisma/client";
 import { cn } from "@/lib/utils";
-import { useSearchParams } from "next/navigation";
+import ManageFilters from "./filters";
+
+const isLocalTask = (id: string) => id.startsWith("local-");
 
 type PriorityVariant = "default" | "secondary" | "destructive";
 
@@ -24,7 +27,7 @@ interface PriorityConfig {
 }
 
 interface ManageTasksProps {
-  tasks: Task[];
+  tasks: any[];
 }
 
 export default function ManageTasks({ tasks: initialTasks }: ManageTasksProps) {
@@ -32,13 +35,46 @@ export default function ManageTasks({ tasks: initialTasks }: ManageTasksProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<{ id: string; title: string } | null>(null);
   const [confirmBeforeDelete, setConfirmBeforeDelete] = useState(true);
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     getDeleteConfirmationSetting().then(setConfirmBeforeDelete);
   }, []);
 
-  const handleDelete = (task: Task) => {
-    if (confirmBeforeDelete) {
+  useEffect(() => {
+    setTasks(initialTasks);
+  }, [initialTasks]);
+
+  const filteredTasks = useMemo(() => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const todayEnd = new Date(today);
+    todayEnd.setHours(23, 59, 59, 999);
+    const weekEnd = new Date(today);
+    weekEnd.setDate(weekEnd.getDate() + 7);
+    const weekStart = new Date(today);
+    weekStart.setDate(weekStart.getDate() - 7);
+
+    return tasks.filter((task) => {
+      const dueDate = new Date(task.dueDate);
+      
+      switch (filter) {
+        case "today":
+          return dueDate >= today && dueDate <= todayEnd;
+        case "week":
+          return dueDate > weekStart && dueDate <= weekEnd;
+        case "overdue":
+          return dueDate < today && !task.completed;
+        case "completed":
+          return task.completed;
+        default:
+          return true;
+      }
+    });
+  }, [tasks, filter]);
+
+  const handleDelete = (task: any) => {
+    if (confirmBeforeDelete && !isLocalTask(task.id)) {
       setTaskToDelete({ id: task.id, title: task.title });
       setShowDeleteModal(true);
     } else {
@@ -47,24 +83,37 @@ export default function ManageTasks({ tasks: initialTasks }: ManageTasksProps) {
   };
 
   const performDelete = async (taskId: string) => {
-    const result = await deleteTask(taskId);
-    if (result.success) {
+    let success = false;
+    if (isLocalTask(taskId)) {
+      success = deleteLocalTask(taskId);
+    } else {
+      const result = await serverDeleteTask(taskId);
+      success = result.success;
+    }
+    if (success) {
       toast.success("Tarea eliminada");
       setTasks(tasks.filter(t => t.id !== taskId));
     } else {
-      toast.error(result.error);
+      toast.error("Error al eliminar");
     }
   };
 
   const handleToggle = async (taskId: string) => {
-    const result = await toggleTask(taskId);
-    if (result.success) {
+    let success = false;
+    if (isLocalTask(taskId)) {
+      const result = toggleLocalTask(taskId);
+      success = !!result;
+    } else {
+      const result = await serverToggleTask(taskId);
+      success = result.success;
+    }
+    if (success) {
       toast.success("Tarea actualizada");
       setTasks(tasks.map(t => 
         t.id === taskId ? { ...t, completed: !t.completed } : t
       ));
-    } else {
-      toast.error(result.error);
+    } else {  
+      toast.error("Error al actualizar");
     }
   };
 
@@ -74,11 +123,12 @@ export default function ManageTasks({ tasks: initialTasks }: ManageTasksProps) {
     low: { variant: "secondary", label: "Baja" },
   };
 
-  const completedTasks = tasks.filter(t => t.completed);
-  const pendingTasks = tasks.filter(t => !t.completed);
+  const completedTasks = filteredTasks.filter(t => t.completed);
+  const pendingTasks = filteredTasks.filter(t => !t.completed);
 
   return (
     <>
+      <ManageFilters onFilterChange={setFilter} activeFilter={filter} />
       <div className="space-y-6">
         {pendingTasks.length > 0 && (
           <div>
@@ -122,7 +172,7 @@ export default function ManageTasks({ tasks: initialTasks }: ManageTasksProps) {
           </div>
         )}
 
-        {tasks.length === 0 && (
+        {filteredTasks.length === 0 && (
           <p className="text-muted-foreground text-center py-8">No hay tareas todavía.</p>
         )}
       </div>
@@ -141,7 +191,7 @@ export default function ManageTasks({ tasks: initialTasks }: ManageTasksProps) {
 }
 
 interface ManageTaskCardProps {
-  task: Task;
+  task: any;
   priority: PriorityConfig;
   onToggle: () => void;
   onDelete: () => void;

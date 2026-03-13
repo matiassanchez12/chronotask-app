@@ -23,7 +23,6 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
-  const [userImage, setUserImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [pomodoro, setPomodoro] = useState(25);
@@ -49,21 +48,6 @@ export default function SettingsPage() {
     loadSettings();
   }, [settingsLoaded]);
 
-  useEffect(() => {
-    async function fetchUserImage() {
-      try {
-        const res = await fetch("/api/user/image");
-        if (res.ok) {
-          const data = await res.json();
-          setUserImage(data.image);
-        }
-      } catch (e) {
-        console.error("Failed to fetch user image:", e);
-      }
-    }
-    fetchUserImage();
-  }, []);
-
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -79,8 +63,6 @@ export default function SettingsPage() {
       });
 
       if (res.ok) {
-        const data = await res.json();
-        setUserImage(data.image);
         await updateSession();
         toast.success("Imagen de perfil actualizada");
       } else {
@@ -155,9 +137,9 @@ export default function SettingsPage() {
         <CardContent>
           <div className="flex items-center gap-6">
             <div className="relative h-24 w-24 rounded-full overflow-hidden bg-muted shrink-0">
-              {userImage ? (
+              {session?.user.image ? (
                 <Image
-                  src={userImage}
+                  src={session?.user.image}
                   alt="Foto de perfil"
                   fill
                   className="object-cover"

@@ -29,7 +29,7 @@ export const authOptions: AuthOptions = {
         if (!user) {
           return null;
         }
-
+        console.log({user})
         const isValidPassword = await bcrypt.compare(
           credentials.password as string,
           user.password
@@ -43,6 +43,7 @@ export const authOptions: AuthOptions = {
           id: user.id,
           email: user.email,
           name: user.name,
+          image: user.image,
         };
       },
     }),
@@ -51,24 +52,16 @@ export const authOptions: AuthOptions = {
     signIn: "/sign-in",
   },
   callbacks: {
-    async jwt({ token, user, account }: { token: any; user?: any; account?: any }) {
-      if (user) {
-        token.id = user.id;
-      }
-      if (account?.provider === "google" && user?.email) {
+    async jwt({ token, user, account, trigger }: { token: any; user?: any; account?: any; trigger?: string }) {
+      if ((account?.provider === "google" && user?.email) || trigger === "update") {
         try {
+          const email = user?.email || token.email;
+
           const existingUser = await prisma.user.findUnique({
-            where: { email: user.email },
+            where: { email },
           });
-          if (existingUser) {
-            token.id = existingUser.id;
-            if (user.image && user.image !== existingUser.image) {
-              await prisma.user.update({
-                where: { id: existingUser.id },
-                data: { image: user.image },
-              });
-            }
-          } else {
+
+          if (!existingUser) {
             const newUser = await prisma.user.create({
               data: {
                 email: user.email,
@@ -78,6 +71,10 @@ export const authOptions: AuthOptions = {
               },
             });
             token.id = newUser.id;
+            token.image = newUser.image;
+          } else {
+            token.id = existingUser.id;
+            token.image = existingUser.image;
           }
         } catch (e) {
           console.error("Google auth error:", e);
@@ -88,6 +85,7 @@ export const authOptions: AuthOptions = {
     async session({ session, token }: { session: any; token: any }) {
       if (session.user) {
         session.user.id = token.id;
+        session.user.image = token.image;
       }
       return session;
     },

@@ -17,6 +17,8 @@ import { es } from "date-fns/locale";
 import { PopoverTrigger, Popover, PopoverContent } from "./ui/popover";
 import { Calendar } from "./ui/calendar";
 import { Switch } from "./ui/switch";
+import { createLocalTaskData, saveLocalTask } from "@/lib/localUser";
+import { useSession } from "next-auth/react";
 
 const addTaskSchema = z
   .object({
@@ -58,6 +60,7 @@ type AddTaskFormData = z.infer<typeof addTaskSchema>;
 
 export default function AddTaskModal() {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession();
 
   const {
     register,
@@ -83,49 +86,62 @@ export default function AddTaskModal() {
   };
 
   const onSubmit = async (data: AddTaskFormData) => {
-    if (!data.dueDate) {
-      return;
-    }
-    const formData = new FormData();
-    formData.set("title", data.title);
-    formData.set("dueDate", data.dueDate.toISOString());
-    formData.set("priority", data.priority);
-    formData.set("usePomodoro", data.usePomodoro.toString());
-    
-    if (data.startTime) {
-      const startDateTime = new Date(data.dueDate);
-      const [hours, minutes] = data.startTime.split(":");
-      startDateTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-      formData.set("startTime", startDateTime.toISOString());
-    }
-    
-    if (data.endTime) {
-      const endDateTime = new Date(data.dueDate);
-      const [hours, minutes] = data.endTime.split(":");
-      endDateTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-      formData.set("endTime", endDateTime.toISOString());
-    }
+    if (!data.dueDate) return;
 
-    const result = await createTask(formData);
-    if (result.success) {
-      toast.success("Task created");
-      handleClose();
+    if (session) {
+      const formData = new FormData();
+      formData.set("title", data.title);
+      formData.set("dueDate", data.dueDate.toISOString());
+      formData.set("priority", data.priority);
+      formData.set("usePomodoro", data.usePomodoro.toString());
+      
+      if (data.startTime) {
+        const startDateTime = new Date(data.dueDate);
+        const [hours, minutes] = data.startTime.split(":");
+        startDateTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+        formData.set("startTime", startDateTime.toISOString());
+      }
+      
+      if (data.endTime) {
+        const endDateTime = new Date(data.dueDate);
+        const [hours, minutes] = data.endTime.split(":");
+        endDateTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+        formData.set("endTime", endDateTime.toISOString());
+      }
+
+      const result = await createTask(formData);
+      if (result.success) {
+        toast.success("Tarea creada");
+        handleClose();
+      } else {
+        toast.error(result.error);
+      }
     } else {
-      toast.error(result.error);
-    }
+      const taskData = createLocalTaskData(
+        data.title,
+        data.dueDate,
+        data.priority,
+        data.usePomodoro,
+        data.startTime,
+        data.endTime
+      );
+      saveLocalTask(taskData);
+      toast.success("Tarea creada");
+      handleClose();
+     }
   };
 
   return (
     <>
       {/* Floating Button */}
-      <button
-      onClick={() => {
-        setIsOpen(true);
-      }}
-      className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
-    >
-      <Plus className="h-6 w-6" />
-    </button>
+      <Button
+        onClick={() => setIsOpen(true)}
+        className="fixed w-14 h-14 bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+        variant='outline'
+        size='icon'
+      >
+        <Plus className="h-5 w-5" />
+      </Button>
 
       {/* Modal */}
       <Modal isOpen={isOpen} onClose={handleClose} title="Nueva Tarea">

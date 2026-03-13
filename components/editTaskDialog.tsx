@@ -5,6 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { updateTask } from "@/app/actions/updateTask";
+import { updateLocalTask } from "@/lib/localUser";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -114,12 +115,41 @@ export default function EditTaskDialog({ task, trigger }: EditTaskDialogProps) {
       formData.set("endTime", endDateTime.toISOString());
     }
 
-    const result = await updateTask(task.id, formData);
-    if (result.success) {
-      toast.success("Tarea actualizada correctamente");
+    if (task.id.startsWith("local-")) {
+      const updates: any = {
+        title: data.title,
+        dueDate: data.dueDate.toISOString(),
+        priority: data.priority,
+        usePomodoro: data.usePomodoro,
+        startTime: null,
+        endTime: null,
+      };
+
+      if (data.startTime) {
+        const startDateTime = new Date(data.dueDate);
+        const [hours, minutes] = data.startTime.split(":");
+        startDateTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+        updates.startTime = startDateTime.toISOString();
+      }
+
+      if (data.endTime) {
+        const endDateTime = new Date(data.dueDate);
+        const [hours, minutes] = data.endTime.split(":");
+        endDateTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+        updates.endTime = endDateTime.toISOString();
+      }
+
+      updateLocalTask(task.id, updates);
+      toast.success("Tarea actualizada");
       handleClose();
     } else {
-      toast.error(result.error);
+      const result = await updateTask(task.id, formData);
+      if (result.success) {
+        toast.success("Tarea actualizada correctamente");
+        handleClose();
+      } else {
+        toast.error(result.error);
+      }
     }
   };
 

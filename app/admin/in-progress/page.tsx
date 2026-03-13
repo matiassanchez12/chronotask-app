@@ -1,35 +1,68 @@
-import Header from "@/components/header";
+"use client";
+
+import { useState, useEffect } from "react";
 import Tasks from "@/components/tasks";
-import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { getUserSettings } from "@/app/actions/settings";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { getLocalTasks } from "@/lib/localUser";
+import { useSession } from "next-auth/react";
 
-export default async function InProgressPage() {
-  const session = await getServerSession();
-  const userId = session?.user?.id;
+export default function InProgressPage() {
+  const { data: session } = useSession();
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const allTasks = await prisma.task.findMany({
-    where: {
-      userId: userId,
-    },
-    orderBy: { dueDate: "asc" },
-  });
+  useEffect(() => {
+    if (session) {
+      fetch("/api/tasks")
+        .then((res) => res.json())
+        .then((data) => {
+          const allTasks = data.tasks || [];
+          const now = new Date();
+          const activeTasks = allTasks.filter((task: any) => {
+            if (!task.startTime || !task.endTime) return false;
+            const start = new Date(task.startTime);
+            const end = new Date(task.endTime);
+            return now >= start && now <= end && !task.completed;
+          });
+          setTasks(activeTasks);
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    } else {
+      const allTasks = getLocalTasks();
+      const now = new Date();
+      const activeTasks = allTasks.filter((task) => {
+        if (!task.startTime || !task.endTime) return false;
+        const start = new Date(task.startTime);
+        const end = new Date(task.endTime);
+        return now >= start && now <= end && !task.completed;
+      });
+      setTasks(activeTasks);
+      setLoading(false);
+    }
+  }, [session]);
 
-  const now = new Date();
-  const activeTasks = allTasks.filter(task => {
-    if (!task.startTime || !task.endTime) return false;
-    const start = new Date(task.startTime);
-    const end = new Date(task.endTime);
-    return now >= start && now <= end && !task.completed;
-  });
-
-  const settings = await getUserSettings();
   const pomodoroSettings = {
-    pomodoroDuration: settings?.pomodoroDuration ?? 25,
-    shortBreakDuration: settings?.shortBreakDuration ?? 5,
+    pomodoroDuration: 25,
+    shortBreakDuration: 5,
   };
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="animate-pulse space-y-4">
+          <div className="h-8 bg-muted rounded w-48"></div>
+          <div className="h-4 bg-muted rounded w-64"></div>
+        </div>
+        <div className="space-y-3">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="h-32 bg-muted rounded-lg animate-pulse"></div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -44,7 +77,7 @@ export default async function InProgressPage() {
         <h1 className="text-3xl font-bold">Tareas en Proceso</h1>
         <p className="text-muted-foreground mt-1">Gestiona tus sesiones de trabajo</p>
       </div>
-      <Tasks tasks={activeTasks} mode="counter" pomodoroSettings={pomodoroSettings} />
+      <Tasks tasks={tasks} mode="counter" pomodoroSettings={pomodoroSettings} />
     </div>
   );
 }

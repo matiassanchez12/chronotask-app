@@ -17,25 +17,7 @@ interface NavbarProps {
 export default function Navbar({ onMenuClick }: NavbarProps) {
   const { data: session } = useSession();
   const [open, setOpen] = useState(false);
-  const [userImage, setUserImage] = useState<string | null>(null);
   const { theme, setTheme } = useTheme();
-
-  useEffect(() => {
-    async function fetchUserImage() {
-      try {
-        const res = await fetch("/api/user/image");
-        if (res.ok) {
-          const data = await res.json();
-          setUserImage(data.image);
-        }
-      } catch (e) {
-        console.error("Failed to fetch user image:", e);
-      }
-    }
-    if (session?.user) {
-      fetchUserImage();
-    }
-  }, [session]);
 
   const userInitials = session?.user?.name
     ? session.user.name
@@ -64,6 +46,19 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
       </div>
 
       <div className="flex items-center gap-2">
+        <Button
+                variant="ghost"
+                className="justify-start gap-2 transition-all duration-200"
+                onClick={toggleTheme}
+              >
+                <span className="transition-transform duration-200 rotate-0 hover:rotate-45">
+                  {theme === "dark" ? (
+                    <Sun className="h-4 w-4" />
+                  ) : (
+                    <Moon className="h-4 w-4" />
+                  )}
+                </span>
+        </Button>
         <TipsModal />
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
@@ -72,9 +67,9 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
               className="h-9 w-9 rounded-full bg-muted hover:bg-muted/80 p-0 flex items-center justify-center relative overflow-hidden"
               aria-label="Menú de usuario"
             >
-              {userImage ? (
+              {session?.user?.image ? (
                 <Image
-                  src={userImage}
+                  src={session.user.image}
                   alt={session?.user?.name || "Usuario"}
                   fill
                   className="object-cover"
@@ -93,21 +88,7 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
                 </div>
               </div>
 
-              <Button
-                variant="outline"
-                className="w-full justify-start gap-2 transition-all duration-200"
-                onClick={toggleTheme}
-                aria-label={theme === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
-              >
-                <span className="transition-transform duration-200 rotate-0 hover:rotate-180">
-                  {theme === "dark" ? (
-                    <Sun className="h-4 w-4" />
-                  ) : (
-                    <Moon className="h-4 w-4" />
-                  )}
-                </span>
-                {theme === "dark" ? "Modo claro" : "Modo oscuro"}
-              </Button>
+              
 
               <Button
                 variant="outline"

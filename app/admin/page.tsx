@@ -1,34 +1,56 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Header from "@/components/header";
 import StatsCards from "@/components/statsCards";
-import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
 import AddTaskModal from "@/components/addTaskModal";
+import { getLocalTasks } from "@/lib/localUser";
+import { useSession } from "next-auth/react";
 
-export default async function Home() {
-  const session = await getServerSession();
-  const userId = session?.user?.id;
+export default function Home() {
+  const { data: session } = useSession();
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const allTasks = await prisma.task.findMany({
-    where: {
-      userId: userId,
-    },
-    orderBy: { dueDate: "asc" },
-  });
+  useEffect(() => {
+    if (session) {
+      fetch("/api/tasks")
+        .then((res) => res.json())
+        .then((data) => {
+          setTasks(data.tasks || []);
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    } else {
+      setTasks(getLocalTasks());
+      setLoading(false);
+    }
+  }, [session]);
 
-  const now = new Date();
-  const activeTasksData = allTasks.filter(task => {
-    if (!task.startTime || !task.endTime) return false;
-    const start = new Date(task.startTime);
-    const end = new Date(task.endTime);
-    return now >= start && now <= end && !task.completed;
-  }).map(task => ({ id: task.id, title: task.title }));
+  if (loading) {
+    return (
+      <>
+        <AddTaskModal />
+        <div className="space-y-10">
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 bg-muted rounded w-64"></div>
+            <div className="h-6 bg-muted rounded w-32"></div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="h-20 bg-muted rounded-lg animate-pulse"></div>
+            <div className="h-20 bg-muted rounded-lg animate-pulse"></div>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
       <AddTaskModal />
       <div className="space-y-10">
-        <Header activeTasks={activeTasksData} />
-        <StatsCards tasks={allTasks} />
+        <Header tasks={tasks} />
+        <StatsCards tasks={tasks} />
       </div>
     </>
   );

@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import { Provider } from "@/components/provider";
 import { ThemeProvider } from "@/components/theme-provider";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
+        <Script defer src="https://cloud.umami.is/script.js" data-website-id="1b652a52-a59d-4ba0-9bcd-faf0d18c93db" />
         <Provider>
           <ThemeProvider
             attribute="class"

@@ -4,7 +4,8 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { Task } from "@/generated/prisma/client";
 import { format } from "date-fns";
 import { Laptop, Coffee, CheckCircle2, SkipForward, Clock } from "lucide-react";
-import { completeTask } from "@/app/actions/completeTask";
+import { completeTask as serverCompleteTask } from "@/app/actions/completeTask";
+import { updateLocalTask } from "@/lib/localUser";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
@@ -127,11 +128,26 @@ function CounterTask({ task, pomodoroDuration, shortBreakDuration, longBreakDura
     if (isCompleted) return;
     
     setIsCompleted(true);
-    const result = await completeTask(task.id, accumulatedTime.work, accumulatedTime.break);
-    if (result.success) {
+    
+    const isLocal = task.id.startsWith("local-");
+    let success = false;
+    
+    if (isLocal) {
+      const result = updateLocalTask(task.id, {
+        completed: true,
+        workTimeMinutes: accumulatedTime.work || 0,
+        breakTimeMinutes: accumulatedTime.break || 0
+      });
+      success = !!result;
+    } else {
+      const result = await serverCompleteTask(task.id, accumulatedTime.work, accumulatedTime.break);
+      success = result.success;
+    }
+    
+    if (success) {
       toast.success("Tarea completada");
     } else {
-      toast.error(result.error);
+      toast.error("Error al completar");
     }
   }, [isCompleted, task.id, accumulatedTime]);
 
@@ -345,11 +361,26 @@ function SimpleTimerTask({ task }: SimpleTimerTaskProps) {
   const handleComplete = useCallback(async () => {
     if (isCompleted || !startTime) return;
     setIsCompleted(true);
-    const result = await completeTask(task.id, Math.floor(elapsed / 60000), 0);
-    if (result.success) {
+    
+    const isLocal = task.id.startsWith("local-");
+    let success = false;
+    
+    if (isLocal) {
+      const result = updateLocalTask(task.id, {
+        completed: true,
+        workTimeMinutes: Math.floor(elapsed / 60000),
+        breakTimeMinutes: 0
+      });
+      success = !!result;
+    } else {
+      const result = await serverCompleteTask(task.id, Math.floor(elapsed / 60000), 0);
+      success = result.success;
+    }
+    
+    if (success) {
       toast.success("Tarea completada");
     } else {
-      toast.error(result.error);
+      toast.error("Error al completar");
     }
   }, [isCompleted, task.id, elapsed, startTime]);
 
