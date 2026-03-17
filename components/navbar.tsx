@@ -46,6 +46,7 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
       </div>
 
       <div className="flex items-center gap-2">
+        <TipsModal />
         <Button
                 variant="ghost"
                 className="justify-start gap-2 transition-all duration-200"
@@ -59,7 +60,6 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
                   )}
                 </span>
         </Button>
-        <TipsModal />
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button

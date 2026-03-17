@@ -1,0 +1,3 @@
+- Usar server actions para lógica de datos
+- Evitar código redundante en pages
+- Mantener componentes livianos

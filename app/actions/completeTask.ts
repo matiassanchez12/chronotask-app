@@ -27,7 +27,6 @@ export async function completeTask(
       },
     });
 
-    revalidatePath("/");
     revalidatePath("/admin");
     return { success: true };
   } catch (e) {

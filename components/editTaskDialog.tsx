@@ -313,7 +313,7 @@ export default function EditTaskDialog({ task, trigger }: EditTaskDialogProps) {
               <div className="flex items-center justify-between p-3 bg-secondary/30 rounded-lg border border-border/50">
                 <Label className="text-sm font-medium text-foreground flex items-center gap-2 cursor-pointer">
                   <Timer className="h-4 w-4 text-muted-foreground" />
-                  Técnica Pomodoro
+                  Tiempo de descanso
                 </Label>
                 <Switch
                   checked={field.value}

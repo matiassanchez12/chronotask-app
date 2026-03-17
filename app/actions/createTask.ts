@@ -10,9 +10,20 @@ export async function createTask(formData: FormData): Promise<ActionResult> {
   try {
     const session = await getServerSession(authOptions);
     const userId = session?.user?.id;
+    const userEmail = session?.user?.email;
 
     if (!userId) {
       return { success: false, error: "No estas autenticado" };
+    }
+
+    if (userEmail === process.env.TEST_USER) {
+      const taskCount = await prisma.task.count({
+        where: { userId },
+      });
+
+      if (taskCount >= 10) {
+        return { success: false, error: "Límite de 10 tareas alcanzado para modo demo" };
+      }
     }
 
     const title = formData.get("title") as string;

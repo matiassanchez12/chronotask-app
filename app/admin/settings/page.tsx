@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Modal } from "@/components/ui/modal";
 import Image from "next/image";
+import Header from "@/components/header";
 
 export default function SettingsPage() {
   const { data: session, update: updateSession } = useSession();
@@ -116,13 +117,10 @@ export default function SettingsPage() {
 
   return (
     <div
-      className="p-6 pb-8 space-y-10 min-h-screen [&::-webkit-scrollbar]:hidden"
+      className="space-y-6 min-h-screen [&::-webkit-scrollbar]:hidden"
       style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
     >
-      <div className="flex items-center gap-3">
-        <Settings className="h-8 w-8 text-cyan-500" />
-        <h1 className="text-3xl font-bold">Configuración</h1>
-      </div>
+      <Header title="Configuraciones" subTitle="" />
 
       <Card className="rounded-xl border border-white/10 bg-white/5 backdrop-blur">
         <CardHeader>

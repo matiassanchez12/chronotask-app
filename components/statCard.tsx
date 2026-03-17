@@ -7,14 +7,6 @@ interface StatCardProps {
   variant?: "cyan" | "green" | "amber" | "rose" | "violet";
 }
 
-const variantStyles = {
-  cyan: "bg-cyan-500/10 text-cyan-500 border-cyan-500/20",
-  green: "bg-green-500/10 text-green-500 border-green-500/20",
-  amber: "bg-amber-500/10 text-amber-500 border-amber-500/20",
-  rose: "bg-rose-500/10 text-rose-500 border-rose-500/20",
-  violet: "bg-violet-500/10 text-violet-500 border-violet-500/20",
-};
-
 const iconBgStyles = {
   cyan: "bg-cyan-500/20",
   green: "bg-green-500/20",

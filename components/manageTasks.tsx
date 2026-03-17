@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { toggleTask as serverToggleTask } from "@/app/actions/toggleTask";
 import { deleteTask as serverDeleteTask } from "@/app/actions/deleteTask";
 import { getDeleteConfirmationSetting } from "@/app/actions/settings";
@@ -8,7 +8,7 @@ import { toggleLocalTask, deleteLocalTask } from "@/lib/localUser";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { Check, Trash2, Calendar, Clock, Edit3, X } from "lucide-react";
+import { Check, Trash2, Calendar, Clock, Edit3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DeleteTaskModal } from "@/components/deleteTaskModal";
@@ -27,54 +27,20 @@ interface PriorityConfig {
 }
 
 interface ManageTasksProps {
-  tasks: any[];
+  tasks: Task[];
 }
 
-export default function ManageTasks({ tasks: initialTasks }: ManageTasksProps) {
-  const [tasks, setTasks] = useState(initialTasks);
+export default function ManageTasks({ tasks }: ManageTasksProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<{ id: string; title: string } | null>(null);
   const [confirmBeforeDelete, setConfirmBeforeDelete] = useState(true);
-  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     getDeleteConfirmationSetting().then(setConfirmBeforeDelete);
   }, []);
 
-  useEffect(() => {
-    setTasks(initialTasks);
-  }, [initialTasks]);
-
-  const filteredTasks = useMemo(() => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const todayEnd = new Date(today);
-    todayEnd.setHours(23, 59, 59, 999);
-    const weekEnd = new Date(today);
-    weekEnd.setDate(weekEnd.getDate() + 7);
-    const weekStart = new Date(today);
-    weekStart.setDate(weekStart.getDate() - 7);
-
-    return tasks.filter((task) => {
-      const dueDate = new Date(task.dueDate);
-      
-      switch (filter) {
-        case "today":
-          return dueDate >= today && dueDate <= todayEnd;
-        case "week":
-          return dueDate > weekStart && dueDate <= weekEnd;
-        case "overdue":
-          return dueDate < today && !task.completed;
-        case "completed":
-          return task.completed;
-        default:
-          return true;
-      }
-    });
-  }, [tasks, filter]);
-
-  const handleDelete = (task: any) => {
-    if (confirmBeforeDelete && !isLocalTask(task.id)) {
+  const handleDelete = (task: Task) => {
+    if (confirmBeforeDelete) {
       setTaskToDelete({ id: task.id, title: task.title });
       setShowDeleteModal(true);
     } else {
@@ -83,36 +49,23 @@ export default function ManageTasks({ tasks: initialTasks }: ManageTasksProps) {
   };
 
   const performDelete = async (taskId: string) => {
-    let success = false;
-    if (isLocalTask(taskId)) {
-      success = deleteLocalTask(taskId);
-    } else {
-      const result = await serverDeleteTask(taskId);
-      success = result.success;
-    }
+    const result = await serverDeleteTask(taskId);
+    const success = result.success;
+
     if (success) {
       toast.success("Tarea eliminada");
-      setTasks(tasks.filter(t => t.id !== taskId));
     } else {
       toast.error("Error al eliminar");
     }
   };
 
   const handleToggle = async (taskId: string) => {
-    let success = false;
-    if (isLocalTask(taskId)) {
-      const result = toggleLocalTask(taskId);
-      success = !!result;
-    } else {
-      const result = await serverToggleTask(taskId);
-      success = result.success;
-    }
+    const result = await serverToggleTask(taskId);
+    const success = result.success;
+
     if (success) {
       toast.success("Tarea actualizada");
-      setTasks(tasks.map(t => 
-        t.id === taskId ? { ...t, completed: !t.completed } : t
-      ));
-    } else {  
+    } else {
       toast.error("Error al actualizar");
     }
   };
@@ -123,12 +76,12 @@ export default function ManageTasks({ tasks: initialTasks }: ManageTasksProps) {
     low: { variant: "secondary", label: "Baja" },
   };
 
-  const completedTasks = filteredTasks.filter(t => t.completed);
-  const pendingTasks = filteredTasks.filter(t => !t.completed);
+  const completedTasks = tasks.filter(t => t.completed);
+  const pendingTasks = tasks.filter(t => !t.completed);
 
   return (
     <>
-      <ManageFilters onFilterChange={setFilter} activeFilter={filter} />
+      <ManageFilters />
       <div className="space-y-6">
         {pendingTasks.length > 0 && (
           <div>
@@ -172,7 +125,7 @@ export default function ManageTasks({ tasks: initialTasks }: ManageTasksProps) {
           </div>
         )}
 
-        {filteredTasks.length === 0 && (
+        {tasks.length === 0 && (
           <p className="text-muted-foreground text-center py-8">No hay tareas todavía.</p>
         )}
       </div>
@@ -191,7 +144,7 @@ export default function ManageTasks({ tasks: initialTasks }: ManageTasksProps) {
 }
 
 interface ManageTaskCardProps {
-  task: any;
+  task: Task;
   priority: PriorityConfig;
   onToggle: () => void;
   onDelete: () => void;
@@ -205,7 +158,7 @@ function ManageTaskCard({ task, priority, onToggle, onDelete }: ManageTaskCardPr
     return () => clearInterval(interval);
   }, []);
 
-  const isActive = task.startTime && task.endTime && !task.completed && 
+  const isActive = task.startTime && task.endTime && !task.completed &&
     now >= new Date(task.startTime) && now <= new Date(task.endTime);
 
   const cardContent = (

@@ -1,23 +1,61 @@
 export interface LocalTask {
   id: string;
   title: string;
-  dueDate: string;
-  startTime: string | null;
-  endTime: string | null;
+  dueDate: Date;
+  startTime: Date | null;
+  endTime: Date | null;
   priority: string;
   completed: boolean;
-  workTimeMinutes: number;
-  breakTimeMinutes: number;
-  createdAt: string;
-  updatedAt: string;
+  workTimeMinutes: number | null;
+  breakTimeMinutes: number | null;
+  usePomodoro: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
 }
 
 const LOCAL_TASKS_KEY = "localTasks";
+const USER_ID_KEY = "userId";
+
+function parseDate(value: string | null): Date | null {
+  if (!value) return null;
+  const date = new Date(value);
+  return isNaN(date.getTime()) ? null : date;
+}
+
+function serializeDate(date: Date | null): string | null {
+  return date ? date.toISOString() : null;
+}
+
+function reviveDates(tasks: LocalTask[]): LocalTask[] {
+  return tasks.map((task) => {
+    const dueDate = parseDate(task.dueDate as unknown as string);
+    return {
+      ...task,
+      dueDate: dueDate ?? new Date(),
+      startTime: parseDate(task.startTime as unknown as string),
+      endTime: parseDate(task.endTime as unknown as string),
+      createdAt: parseDate(task.createdAt as unknown as string) ?? new Date(),
+      updatedAt: parseDate(task.updatedAt as unknown as string) ?? new Date(),
+    };
+  });
+}
+
+export function getUserId(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(USER_ID_KEY);
+}
+
+export function setUserId(id: string): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(USER_ID_KEY, id);
+}
 
 export function getLocalTasks(): LocalTask[] {
   if (typeof window === "undefined") return [];
   const data = localStorage.getItem(LOCAL_TASKS_KEY);
-  return data ? JSON.parse(data) : [];
+  const tasks = data ? JSON.parse(data) : [];
+  return reviveDates(tasks);
 }
 
 export function createLocalTaskData(
@@ -28,36 +66,45 @@ export function createLocalTaskData(
   startTime?: string,
   endTime?: string
 ): Omit<LocalTask, "completed" | "workTimeMinutes" | "breakTimeMinutes" | "createdAt" | "updatedAt"> {
-  const task: any = {
+  const userId = getUserId();
+  if (!userId) {
+    throw new Error("User ID not found in localStorage. Please set it first.");
+  }
+  
+  const task: Partial<LocalTask> = {
     title,
-    dueDate: dueDate.toISOString(),
+    dueDate,
     priority,
+    usePomodoro,
     startTime: null,
     endTime: null,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    userId,
   };
 
   if (startTime) {
     const date = new Date(dueDate);
     const [h, m] = startTime.split(":");
     date.setHours(parseInt(h), parseInt(m), 0, 0);
-    task.startTime = date.toISOString();
+    task.startTime = date;
   }
 
   if (endTime) {
     const date = new Date(dueDate);
     const [h, m] = endTime.split(":");
     date.setHours(parseInt(h), parseInt(m), 0, 0);
-    task.endTime = date.toISOString();
+    task.endTime = date;
   }
-  const randomId = Math.random().toString(36).substr(2, 9);
-  return {...task, id: `local-${randomId}` };
+
+  return {
+    ...task,
+  } as Omit<LocalTask, "completed" | "workTimeMinutes" | "breakTimeMinutes" | "createdAt" | "updatedAt">;
 }
 
-export function saveLocalTask(task: Omit<LocalTask, "id" | "completed" | "workTimeMinutes" | "breakTimeMinutes" | "createdAt" | "updatedAt">): LocalTask {
+export function saveLocalTask(
+  task: Omit<LocalTask, "completed" | "workTimeMinutes" | "breakTimeMinutes" | "createdAt" | "updatedAt">
+): LocalTask {
   const tasks = getLocalTasks();
-  const now = new Date().toISOString();
+  const now = new Date();
   const newTask: LocalTask = {
     ...task,
     id: `local-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
@@ -68,7 +115,15 @@ export function saveLocalTask(task: Omit<LocalTask, "id" | "completed" | "workTi
     updatedAt: now,
   };
   tasks.push(newTask);
-  localStorage.setItem(LOCAL_TASKS_KEY, JSON.stringify(tasks));
+  const serialized = tasks.map((t) => ({
+    ...t,
+    dueDate: serializeDate(t.dueDate),
+    startTime: serializeDate(t.startTime),
+    endTime: serializeDate(t.endTime),
+    createdAt: serializeDate(t.createdAt),
+    updatedAt: serializeDate(t.updatedAt),
+  }));
+  localStorage.setItem(LOCAL_TASKS_KEY, JSON.stringify(serialized));
   return newTask;
 }
 
@@ -77,8 +132,18 @@ export function updateLocalTask(id: string, updates: Partial<LocalTask>): LocalT
   const tasks = getLocalTasks();
   const index = tasks.findIndex((t) => t.id === id);
   if (index === -1) return null;
-  tasks[index] = { ...tasks[index], ...updates, updatedAt: new Date().toISOString() };
-  localStorage.setItem(LOCAL_TASKS_KEY, JSON.stringify(tasks));
+  const now = new Date();
+  tasks[index] = { ...tasks[index], ...updates, updatedAt: now };
+  
+  const serialized = tasks.map((t) => ({
+    ...t,
+    dueDate: serializeDate(t.dueDate),
+    startTime: serializeDate(t.startTime),
+    endTime: serializeDate(t.endTime),
+    createdAt: serializeDate(t.createdAt),
+    updatedAt: serializeDate(t.updatedAt),
+  }));
+  localStorage.setItem(LOCAL_TASKS_KEY, JSON.stringify(serialized));
   return tasks[index];
 }
 
@@ -87,7 +152,16 @@ export function deleteLocalTask(id: string): boolean {
   const tasks = getLocalTasks();
   const filtered = tasks.filter((t) => t.id !== id);
   if (filtered.length === tasks.length) return false;
-  localStorage.setItem(LOCAL_TASKS_KEY, JSON.stringify(filtered));
+  
+  const serialized = filtered.map((t) => ({
+    ...t,
+    dueDate: serializeDate(t.dueDate),
+    startTime: serializeDate(t.startTime),
+    endTime: serializeDate(t.endTime),
+    createdAt: serializeDate(t.createdAt),
+    updatedAt: serializeDate(t.updatedAt),
+  }));
+  localStorage.setItem(LOCAL_TASKS_KEY, JSON.stringify(serialized));
   return true;
 }
 

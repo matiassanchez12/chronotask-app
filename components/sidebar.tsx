@@ -8,7 +8,8 @@ import {
   Settings,
   X,
   Timer,
-  ListTodo
+  ListTodo,
+  WorkflowIcon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ const navigation = [
   { name: "Hoy", href: "/admin", icon: Calendar },
   { name: "Gestionar", href: "/admin/manage", icon: ListTodo },
   { name: "En proceso", href: "/admin/in-progress", icon: Timer },
+  { name: "Flujo de tareas", href: "/admin/diagram", icon: WorkflowIcon },
   { name: "Configuración", href: "/admin/settings", icon: Settings },
 ];
 

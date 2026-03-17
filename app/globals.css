@@ -121,7 +121,7 @@
     @apply border-border outline-ring/50;
   }
   html, body {
-    @apply bg-background text-foreground overflow-hidden;
+    @apply bg-background text-foreground;
   }
   html.dark input:-webkit-autofill,
   html.dark input:-webkit-autofill:hover,

@@ -78,17 +78,7 @@ const tips = [
       { label: "Cerrar IDE y herramientas", value: "" },
     ],
   },
-  {
-    title: "Relajar el Sistema Nervioso",
-    content: [
-      { label: "Respirar lento", value: "3-5 min" },
-      { label: "Exhalar más largo que inhalar", value: "" },
-      { label: "Caminar sin celular", value: "10-20 min" },
-      { label: "Mirar a lo lejos", value: "2-3 min" },
-      { label: "Movimiento físico corto", value: "" },
-      { label: "Escribir lo que tenés en cabeza", value: "5 min" },
-    ],
-  },
+  
 ];
 
 export default function TipsModal() {
