@@ -56,7 +56,7 @@ export default function Header({ tasks = [] }: HeaderProps) {
   const todayTasks = findTodayTasks(tasks);
   const nextWeekTasks = findNextWeekTasks(tasks);
 
-  const isWeekend = now.getDay() === 6;
+  const isWeekend = now.getDay() === 0;
 
   useEffect(() => {
     const interval = setInterval(() => setNow(new Date()), 60000);
