@@ -94,7 +94,8 @@ export const UserSettingsScalarFieldEnum = {
   shortBreakDuration: 'shortBreakDuration',
   longBreakDuration: 'longBreakDuration',
   confirmBeforeDelete: 'confirmBeforeDelete',
-  fontSize: 'fontSize'
+  fontSize: 'fontSize',
+  weeklyGoal: 'weeklyGoal'
 } as const
 
 export type UserSettingsScalarFieldEnum = (typeof UserSettingsScalarFieldEnum)[keyof typeof UserSettingsScalarFieldEnum]

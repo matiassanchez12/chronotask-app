@@ -21,9 +21,10 @@ interface Task {
 
 interface StatsCardsProps {
   tasks: Task[];
+  weeklyGoal?: number;
 }
 
-export default function StatsCards({ tasks }: StatsCardsProps) {
+export default function StatsCards({ tasks, weeklyGoal }: StatsCardsProps) {
   const isTaskInProgress = (task: Task) => {
     if (!task.startTime || !task.endTime) return false;
     const now = new Date();
@@ -36,17 +37,17 @@ export default function StatsCards({ tasks }: StatsCardsProps) {
     const completedTasks = tasks.filter((t) => t.completed).length;
     const todayTasks = tasks.filter(isTaskInProgress).length;
     const pendingTasks = tasks.filter((t) => !t.completed).length;
-    const weeklyGoal = 20;
-    const weeklyProgress = Math.min(completedTasks, weeklyGoal);
+    const weeklyGoalValue = weeklyGoal ?? 20;
+    const weeklyProgress = Math.min(completedTasks, weeklyGoalValue);
 
     return {
       completedTasks,
-      weeklyGoal,
+      weeklyGoal: weeklyGoalValue,
       weeklyProgress,
       todayTasks,
       pendingTasks,
     };
-  }, [tasks]);
+  }, [tasks, weeklyGoal]);
 
   return (
     <div className="grid grid-cols-2 gap-3">

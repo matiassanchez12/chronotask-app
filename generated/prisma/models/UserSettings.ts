@@ -31,6 +31,7 @@ export type UserSettingsAvgAggregateOutputType = {
   shortBreakDuration: number | null
   longBreakDuration: number | null
   fontSize: number | null
+  weeklyGoal: number | null
 }
 
 export type UserSettingsSumAggregateOutputType = {
@@ -38,6 +39,7 @@ export type UserSettingsSumAggregateOutputType = {
   shortBreakDuration: number | null
   longBreakDuration: number | null
   fontSize: number | null
+  weeklyGoal: number | null
 }
 
 export type UserSettingsMinAggregateOutputType = {
@@ -48,6 +50,7 @@ export type UserSettingsMinAggregateOutputType = {
   longBreakDuration: number | null
   confirmBeforeDelete: boolean | null
   fontSize: number | null
+  weeklyGoal: number | null
 }
 
 export type UserSettingsMaxAggregateOutputType = {
@@ -58,6 +61,7 @@ export type UserSettingsMaxAggregateOutputType = {
   longBreakDuration: number | null
   confirmBeforeDelete: boolean | null
   fontSize: number | null
+  weeklyGoal: number | null
 }
 
 export type UserSettingsCountAggregateOutputType = {
@@ -68,6 +72,7 @@ export type UserSettingsCountAggregateOutputType = {
   longBreakDuration: number
   confirmBeforeDelete: number
   fontSize: number
+  weeklyGoal: number
   _all: number
 }
 
@@ -77,6 +82,7 @@ export type UserSettingsAvgAggregateInputType = {
   shortBreakDuration?: true
   longBreakDuration?: true
   fontSize?: true
+  weeklyGoal?: true
 }
 
 export type UserSettingsSumAggregateInputType = {
@@ -84,6 +90,7 @@ export type UserSettingsSumAggregateInputType = {
   shortBreakDuration?: true
   longBreakDuration?: true
   fontSize?: true
+  weeklyGoal?: true
 }
 
 export type UserSettingsMinAggregateInputType = {
@@ -94,6 +101,7 @@ export type UserSettingsMinAggregateInputType = {
   longBreakDuration?: true
   confirmBeforeDelete?: true
   fontSize?: true
+  weeklyGoal?: true
 }
 
 export type UserSettingsMaxAggregateInputType = {
@@ -104,6 +112,7 @@ export type UserSettingsMaxAggregateInputType = {
   longBreakDuration?: true
   confirmBeforeDelete?: true
   fontSize?: true
+  weeklyGoal?: true
 }
 
 export type UserSettingsCountAggregateInputType = {
@@ -114,6 +123,7 @@ export type UserSettingsCountAggregateInputType = {
   longBreakDuration?: true
   confirmBeforeDelete?: true
   fontSize?: true
+  weeklyGoal?: true
   _all?: true
 }
 
@@ -211,6 +221,7 @@ export type UserSettingsGroupByOutputType = {
   longBreakDuration: number
   confirmBeforeDelete: boolean
   fontSize: number
+  weeklyGoal: number
   _count: UserSettingsCountAggregateOutputType | null
   _avg: UserSettingsAvgAggregateOutputType | null
   _sum: UserSettingsSumAggregateOutputType | null
@@ -244,6 +255,7 @@ export type UserSettingsWhereInput = {
   longBreakDuration?: Prisma.IntFilter<"UserSettings"> | number
   confirmBeforeDelete?: Prisma.BoolFilter<"UserSettings"> | boolean
   fontSize?: Prisma.IntFilter<"UserSettings"> | number
+  weeklyGoal?: Prisma.IntFilter<"UserSettings"> | number
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -255,6 +267,7 @@ export type UserSettingsOrderByWithRelationInput = {
   longBreakDuration?: Prisma.SortOrder
   confirmBeforeDelete?: Prisma.SortOrder
   fontSize?: Prisma.SortOrder
+  weeklyGoal?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -269,6 +282,7 @@ export type UserSettingsWhereUniqueInput = Prisma.AtLeast<{
   longBreakDuration?: Prisma.IntFilter<"UserSettings"> | number
   confirmBeforeDelete?: Prisma.BoolFilter<"UserSettings"> | boolean
   fontSize?: Prisma.IntFilter<"UserSettings"> | number
+  weeklyGoal?: Prisma.IntFilter<"UserSettings"> | number
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "userId">
 
@@ -280,6 +294,7 @@ export type UserSettingsOrderByWithAggregationInput = {
   longBreakDuration?: Prisma.SortOrder
   confirmBeforeDelete?: Prisma.SortOrder
   fontSize?: Prisma.SortOrder
+  weeklyGoal?: Prisma.SortOrder
   _count?: Prisma.UserSettingsCountOrderByAggregateInput
   _avg?: Prisma.UserSettingsAvgOrderByAggregateInput
   _max?: Prisma.UserSettingsMaxOrderByAggregateInput
@@ -298,6 +313,7 @@ export type UserSettingsScalarWhereWithAggregatesInput = {
   longBreakDuration?: Prisma.IntWithAggregatesFilter<"UserSettings"> | number
   confirmBeforeDelete?: Prisma.BoolWithAggregatesFilter<"UserSettings"> | boolean
   fontSize?: Prisma.IntWithAggregatesFilter<"UserSettings"> | number
+  weeklyGoal?: Prisma.IntWithAggregatesFilter<"UserSettings"> | number
 }
 
 export type UserSettingsCreateInput = {
@@ -307,6 +323,7 @@ export type UserSettingsCreateInput = {
   longBreakDuration?: number
   confirmBeforeDelete?: boolean
   fontSize?: number
+  weeklyGoal?: number
   user: Prisma.UserCreateNestedOneWithoutSettingsInput
 }
 
@@ -318,6 +335,7 @@ export type UserSettingsUncheckedCreateInput = {
   longBreakDuration?: number
   confirmBeforeDelete?: boolean
   fontSize?: number
+  weeklyGoal?: number
 }
 
 export type UserSettingsUpdateInput = {
@@ -327,6 +345,7 @@ export type UserSettingsUpdateInput = {
   longBreakDuration?: Prisma.IntFieldUpdateOperationsInput | number
   confirmBeforeDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fontSize?: Prisma.IntFieldUpdateOperationsInput | number
+  weeklyGoal?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneRequiredWithoutSettingsNestedInput
 }
 
@@ -338,6 +357,7 @@ export type UserSettingsUncheckedUpdateInput = {
   longBreakDuration?: Prisma.IntFieldUpdateOperationsInput | number
   confirmBeforeDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fontSize?: Prisma.IntFieldUpdateOperationsInput | number
+  weeklyGoal?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type UserSettingsCreateManyInput = {
@@ -348,6 +368,7 @@ export type UserSettingsCreateManyInput = {
   longBreakDuration?: number
   confirmBeforeDelete?: boolean
   fontSize?: number
+  weeklyGoal?: number
 }
 
 export type UserSettingsUpdateManyMutationInput = {
@@ -357,6 +378,7 @@ export type UserSettingsUpdateManyMutationInput = {
   longBreakDuration?: Prisma.IntFieldUpdateOperationsInput | number
   confirmBeforeDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fontSize?: Prisma.IntFieldUpdateOperationsInput | number
+  weeklyGoal?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type UserSettingsUncheckedUpdateManyInput = {
@@ -367,6 +389,7 @@ export type UserSettingsUncheckedUpdateManyInput = {
   longBreakDuration?: Prisma.IntFieldUpdateOperationsInput | number
   confirmBeforeDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fontSize?: Prisma.IntFieldUpdateOperationsInput | number
+  weeklyGoal?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type UserSettingsNullableScalarRelationFilter = {
@@ -382,6 +405,7 @@ export type UserSettingsCountOrderByAggregateInput = {
   longBreakDuration?: Prisma.SortOrder
   confirmBeforeDelete?: Prisma.SortOrder
   fontSize?: Prisma.SortOrder
+  weeklyGoal?: Prisma.SortOrder
 }
 
 export type UserSettingsAvgOrderByAggregateInput = {
@@ -389,6 +413,7 @@ export type UserSettingsAvgOrderByAggregateInput = {
   shortBreakDuration?: Prisma.SortOrder
   longBreakDuration?: Prisma.SortOrder
   fontSize?: Prisma.SortOrder
+  weeklyGoal?: Prisma.SortOrder
 }
 
 export type UserSettingsMaxOrderByAggregateInput = {
@@ -399,6 +424,7 @@ export type UserSettingsMaxOrderByAggregateInput = {
   longBreakDuration?: Prisma.SortOrder
   confirmBeforeDelete?: Prisma.SortOrder
   fontSize?: Prisma.SortOrder
+  weeklyGoal?: Prisma.SortOrder
 }
 
 export type UserSettingsMinOrderByAggregateInput = {
@@ -409,6 +435,7 @@ export type UserSettingsMinOrderByAggregateInput = {
   longBreakDuration?: Prisma.SortOrder
   confirmBeforeDelete?: Prisma.SortOrder
   fontSize?: Prisma.SortOrder
+  weeklyGoal?: Prisma.SortOrder
 }
 
 export type UserSettingsSumOrderByAggregateInput = {
@@ -416,6 +443,7 @@ export type UserSettingsSumOrderByAggregateInput = {
   shortBreakDuration?: Prisma.SortOrder
   longBreakDuration?: Prisma.SortOrder
   fontSize?: Prisma.SortOrder
+  weeklyGoal?: Prisma.SortOrder
 }
 
 export type UserSettingsCreateNestedOneWithoutUserInput = {
@@ -469,6 +497,7 @@ export type UserSettingsCreateWithoutUserInput = {
   longBreakDuration?: number
   confirmBeforeDelete?: boolean
   fontSize?: number
+  weeklyGoal?: number
 }
 
 export type UserSettingsUncheckedCreateWithoutUserInput = {
@@ -478,6 +507,7 @@ export type UserSettingsUncheckedCreateWithoutUserInput = {
   longBreakDuration?: number
   confirmBeforeDelete?: boolean
   fontSize?: number
+  weeklyGoal?: number
 }
 
 export type UserSettingsCreateOrConnectWithoutUserInput = {
@@ -503,6 +533,7 @@ export type UserSettingsUpdateWithoutUserInput = {
   longBreakDuration?: Prisma.IntFieldUpdateOperationsInput | number
   confirmBeforeDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fontSize?: Prisma.IntFieldUpdateOperationsInput | number
+  weeklyGoal?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type UserSettingsUncheckedUpdateWithoutUserInput = {
@@ -512,6 +543,7 @@ export type UserSettingsUncheckedUpdateWithoutUserInput = {
   longBreakDuration?: Prisma.IntFieldUpdateOperationsInput | number
   confirmBeforeDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fontSize?: Prisma.IntFieldUpdateOperationsInput | number
+  weeklyGoal?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -524,6 +556,7 @@ export type UserSettingsSelect<ExtArgs extends runtime.Types.Extensions.Internal
   longBreakDuration?: boolean
   confirmBeforeDelete?: boolean
   fontSize?: boolean
+  weeklyGoal?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userSettings"]>
 
@@ -535,6 +568,7 @@ export type UserSettingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   longBreakDuration?: boolean
   confirmBeforeDelete?: boolean
   fontSize?: boolean
+  weeklyGoal?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userSettings"]>
 
@@ -546,6 +580,7 @@ export type UserSettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   longBreakDuration?: boolean
   confirmBeforeDelete?: boolean
   fontSize?: boolean
+  weeklyGoal?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userSettings"]>
 
@@ -557,9 +592,10 @@ export type UserSettingsSelectScalar = {
   longBreakDuration?: boolean
   confirmBeforeDelete?: boolean
   fontSize?: boolean
+  weeklyGoal?: boolean
 }
 
-export type UserSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "pomodoroDuration" | "shortBreakDuration" | "longBreakDuration" | "confirmBeforeDelete" | "fontSize", ExtArgs["result"]["userSettings"]>
+export type UserSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "pomodoroDuration" | "shortBreakDuration" | "longBreakDuration" | "confirmBeforeDelete" | "fontSize" | "weeklyGoal", ExtArgs["result"]["userSettings"]>
 export type UserSettingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -583,6 +619,7 @@ export type $UserSettingsPayload<ExtArgs extends runtime.Types.Extensions.Intern
     longBreakDuration: number
     confirmBeforeDelete: boolean
     fontSize: number
+    weeklyGoal: number
   }, ExtArgs["result"]["userSettings"]>
   composites: {}
 }
@@ -1014,6 +1051,7 @@ export interface UserSettingsFieldRefs {
   readonly longBreakDuration: Prisma.FieldRef<"UserSettings", 'Int'>
   readonly confirmBeforeDelete: Prisma.FieldRef<"UserSettings", 'Boolean'>
   readonly fontSize: Prisma.FieldRef<"UserSettings", 'Int'>
+  readonly weeklyGoal: Prisma.FieldRef<"UserSettings", 'Int'>
 }
     
 

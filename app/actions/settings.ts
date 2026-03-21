@@ -170,6 +170,38 @@ export async function updateFontSize(fontSize: number): Promise<ActionResult> {
   }
 }
 
+export async function updateWeeklyGoal(weeklyGoal: number): Promise<ActionResult> {
+  try {
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.id;
+
+    if (!userId) {
+      return { success: false, error: "No estas autenticado" };
+    }
+
+    await prisma.userSettings.upsert({
+      where: { userId },
+      update: {
+        weeklyGoal,
+      },
+      create: {
+        userId,
+        weeklyGoal,
+      },
+    });
+
+    revalidatePath("/settings");
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (e) {
+    console.error("updateWeeklyGoal:", e);
+    return {
+      success: false,
+      error: e instanceof Error ? e.message : "Failed to update weekly goal",
+    };
+  }
+}
+
 export async function getUserProfile() {
   try {
     const session = await getServerSession(authOptions);

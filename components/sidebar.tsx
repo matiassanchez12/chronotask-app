@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import Logo from "./logo";
 
 const navigation = [
   { name: "Hoy", href: "/admin", icon: Calendar },
@@ -45,14 +46,8 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
       )}>
         <div className="p-6">
           <div className="flex items-center justify-between">
-            <Link href="/admin" className="flex items-center gap-2">
-              <Image
-                src="/logo.svg"
-                alt="ChonoTask"
-                width={182}
-                height={182}
-                className="object-contain dark:invert dark:brightness-90"
-              />
+            <Link href='/admin' className="flex items-center justify-center gap-2">
+              <Logo />
             </Link>
             <Button
               variant="ghost"

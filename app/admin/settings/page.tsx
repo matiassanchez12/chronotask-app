@@ -6,10 +6,11 @@ import {
   getUserSettings,
   updatePomodoroSettings,
   updateDeleteConfirmation,
+  updateWeeklyGoal,
   deleteUserAccount,
 } from "@/app/actions/settings";
 import { signOut, useSession } from "next-auth/react";
-import { Settings, Timer, Trash2, AlertTriangle, Loader2, User, Upload } from "lucide-react";
+import { Settings, Timer, Trash2, AlertTriangle, Loader2, User, Upload, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,6 +31,7 @@ export default function SettingsPage() {
   const [shortBreak, setShortBreak] = useState(5);
   const [longBreak, setLongBreak] = useState(15);
   const [confirmBeforeDelete, setConfirmBeforeDelete] = useState(true);
+  const [weeklyGoal, setWeeklyGoal] = useState(20);
 
   const [settingsLoaded, setSettingsLoaded] = useState(false);
 
@@ -42,6 +44,7 @@ export default function SettingsPage() {
         setShortBreak(settings.shortBreakDuration);
         setLongBreak(settings.longBreakDuration);
         setConfirmBeforeDelete(settings.confirmBeforeDelete);
+        setWeeklyGoal(settings.weeklyGoal);
         setSettingsLoaded(true);
       }
       setLoading(false);
@@ -82,6 +85,17 @@ export default function SettingsPage() {
     setSaving(false);
     if (result.success) {
       toast.success("Configuración guardada");
+    } else {
+      toast.error(result.error);
+    }
+  };
+
+  const handleWeeklyGoalSave = async () => {
+    setSaving(true);
+    const result = await updateWeeklyGoal(weeklyGoal);
+    setSaving(false);
+    if (result.success) {
+      toast.success("Meta semanal guardada");
     } else {
       toast.error(result.error);
     }
@@ -227,6 +241,60 @@ export default function SettingsPage() {
           </div>
           <Button onClick={handlePomodoroSave} disabled={saving} className="bg-cyan-500 hover:bg-cyan-600">
             {saving ? "Guardando..." : "Guardar"}
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Card className="rounded-xl border border-white/10 bg-white/5 backdrop-blur">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Target className="h-5 w-5 text-cyan-500" />
+            Meta Semanal
+          </CardTitle>
+          <CardDescription>
+            Configura tu meta de tareas completadas por semana
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="flex items-center justify-center py-4">
+            <div className="text-center">
+              <p className="text-5xl font-bold text-cyan-400">{weeklyGoal}</p>
+              <p className="text-sm text-muted-foreground mt-1">tareas/semana</p>
+            </div>
+          </div>
+          
+          <div className="space-y-2">
+            <Input
+              id="weeklyGoal"
+              type="range"
+              min={1}
+              max={50}
+              value={weeklyGoal}
+              onChange={(e) => setWeeklyGoal(Number(e.target.value))}
+              className="cursor-pointer accent-cyan-500"
+            />
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>1</span>
+              <span>50</span>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2 justify-center">
+            {[5, 10, 15, 20, 25, 30].map((value) => (
+              <Button
+                key={value}
+                variant={weeklyGoal === value ? "default" : "outline"}
+                size="sm"
+                onClick={() => setWeeklyGoal(value)}
+                className={weeklyGoal === value ? "bg-cyan-500 hover:bg-cyan-600" : ""}
+              >
+                {value}
+              </Button>
+            ))}
+          </div>
+
+          <Button onClick={handleWeeklyGoalSave} disabled={saving} className="w-full bg-cyan-500 hover:bg-cyan-600">
+            {saving ? "Guardando..." : "Guardar meta"}
           </Button>
         </CardContent>
       </Card>

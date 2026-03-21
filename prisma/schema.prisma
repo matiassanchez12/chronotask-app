@@ -32,6 +32,7 @@ model UserSettings {
   longBreakDuration       Int     @default(15)
   confirmBeforeDelete     Boolean @default(true)
   fontSize                Int     @default(16)
+  weeklyGoal              Int     @default(20)
   user                    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 

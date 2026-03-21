@@ -87,16 +87,6 @@ export default function Header({ tasks = [] }: HeaderProps) {
         />
       )}
 
-      {todayTasks.length > 0 && (
-        <ActionCard
-          text={`Para hoy`}
-          subtext={todayTasks.map(t => t.title).join(', ')}
-          href="/admin/manage?filter=today"
-          color="lime"
-          Icon={<NotebookIcon className="h-4 w-4" />}
-        />
-      )}  
-
       {
         isWeekend && (
           <ActionCard

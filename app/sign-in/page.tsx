@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import Logo from "@/components/logo";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -47,14 +48,8 @@ export default function SignInPage() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
-          <div className="flex justify-center mb-2">
-            <Image
-              src="/logo.svg"
-              alt="chonotask"
-              width={188}
-              height={188}
-              className="object-contain dark:invert dark:brightness-90"
-              />
+          <div className="flex justify-center items-center gap-2">
+            <Logo />
           </div>
           <CardTitle className="text-2xl font-bold">Bienvenido de nuevo</CardTitle>
           <CardDescription>Ingresa tus credenciales para acceder a tu cuenta</CardDescription>
