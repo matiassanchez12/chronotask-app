@@ -1,4 +1,4 @@
-import AdminLayoutClient from "@/components/adminLayoutClient";
+import AdminLayoutClient from "@/components/layouts/admin-layout-client";
 import { getUserSettings } from "@/app/actions/settings";
 
 export const dynamic = "force-dynamic";

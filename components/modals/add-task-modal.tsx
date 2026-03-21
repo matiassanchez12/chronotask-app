@@ -14,10 +14,9 @@ import { Modal } from "@/components/ui/modal";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { PopoverTrigger, Popover, PopoverContent } from "./ui/popover";
-import { Calendar } from "./ui/calendar";
-import { Switch } from "./ui/switch";
-import { createLocalTaskData, saveLocalTask } from "@/lib/localUser";
+import { PopoverTrigger, Popover, PopoverContent } from "../ui/popover";
+import { Calendar } from "../ui/calendar";
+import { Switch } from "../ui/switch";
 import { useSession } from "next-auth/react";
 
 const addTaskSchema = z
@@ -116,22 +115,7 @@ export default function AddTaskModal() {
       } else {
         toast.error(result.error);
       }
-    } else {
-      const taskData = createLocalTaskData(
-        data.title,
-        data.dueDate,
-        data.priority,
-        data.usePomodoro,
-        data.startTime,
-        data.endTime
-      );
-      saveLocalTask(taskData);
-      toast.success("Tarea creada");
-      handleClose();
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
-     }
+    }
   };
 
   return (
@@ -300,7 +284,7 @@ export default function AddTaskModal() {
               <div className="flex items-center justify-between p-3 bg-secondary/30 rounded-lg border border-border/50">
                 <Label className="text-sm font-medium text-foreground flex items-center gap-2 cursor-pointer">
                   <Timer className="h-4 w-4 text-muted-foreground" />
-                  Tiempo de descanso
+                  Tiempos de descanso
                 </Label>
                 <Switch
                   checked={field.value}

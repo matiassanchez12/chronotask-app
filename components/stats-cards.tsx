@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { CheckCircle2, Calendar, Target, MinusCircle } from "lucide-react";
-import StatCard from "./statCard";
+import StatCard from "./stat-card";
 
 interface Task {
   id: string;

@@ -1,14 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
-import Link from "next/link";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { LogOut, Moon, Sun, Settings, Menu } from "lucide-react";
+import { LogOut, Moon, Sun, Menu } from "lucide-react";
 import Image from "next/image";
-import TipsModal from "@/components/tipsModal";
+import TipsModal from "@/components/modals/tips-modal";
 
 interface NavbarProps {
   onMenuClick?: () => void;
@@ -46,19 +45,23 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
       </div>
 
       <div className="flex items-center gap-2">
-        <TipsModal />
+        {
+          session?.user?.email === 'matias.sanchez.0097@gmail.com' &&
+          <TipsModal />
+        }
+        
         <Button
-                variant="ghost"
-                className="justify-start gap-2 transition-all duration-200"
-                onClick={toggleTheme}
-              >
-                <span className="transition-transform duration-200 rotate-0 hover:rotate-45">
-                  {theme === "dark" ? (
-                    <Sun className="h-4 w-4" />
-                  ) : (
-                    <Moon className="h-4 w-4" />
-                  )}
-                </span>
+          variant="ghost"
+          className="justify-start gap-2 transition-all duration-200"
+          onClick={toggleTheme}
+        >
+          <span className="transition-transform duration-200 rotate-0 hover:rotate-45">
+            {theme === "dark" ? (
+              <Sun className="h-4 w-4" />
+            ) : (
+              <Moon className="h-4 w-4" />
+            )}
+          </span>
         </Button>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
@@ -87,9 +90,6 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
                   <span className="text-xs text-muted-foreground">{session?.user?.email}</span>
                 </div>
               </div>
-
-              
-
               <Button
                 variant="outline"
                 className="w-full justify-start gap-2"

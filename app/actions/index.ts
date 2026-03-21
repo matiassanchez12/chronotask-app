@@ -5,3 +5,4 @@ export * from './getTasks';
 export * from './toggleTask';
 export * from './updateTask';
 export * from './updateTaskTime';
+export * from './settings';

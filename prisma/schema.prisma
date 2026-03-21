@@ -49,5 +49,30 @@ model Task {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   userId          String
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Task_user_fkey")
+  
+  dependsOn   TaskDependency[] @relation("ToTask")
+  dependents TaskDependency[] @relation("FromTask")
+  subtasks    Subtask[]
+}
+
+model Subtask {
+  id          String   @id @default(cuid())
+  description String
+  completed   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  order       Int      @default(0)
+  taskId      String
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model TaskDependency {
+  id          String @id @default(cuid())
+  fromTaskId  String
+  toTaskId    String
+  
+  fromTask    Task   @relation("FromTask", fields: [fromTaskId], references: [id], map: "TaskDependency_fromTask_fkey", onDelete: Cascade)
+  toTask      Task   @relation("ToTask", fields: [toTaskId], references: [id], map: "TaskDependency_toTask_fkey", onDelete: Cascade)
+  
+  @@unique([fromTaskId, toTaskId])
 }

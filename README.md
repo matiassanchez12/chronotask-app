@@ -26,7 +26,10 @@
 Para una mejor visualizacion de objetivos, se podra ver estas relaciones de tarea en una interfaz para que el usuario vea sus tareas y progresos en las mismas.
 En lugar de mostrar el progreso de la task con numeros, mostrarlo con un border al rededor verde que se vaya completando segun pasa el tiempo
 - [] agregar opcion rutina. Crear tabla rutine, la rutina tendra 3 datos: dia(nombre, lunes martes etc), horario(opcional), perioricidad(cada 1 semana, cada 15 dias, cada 1 mes, 1 año),
-
+[] las tareas pueden tener sub tareas- quiero poder anotar mi progreso diario en mi portfolio, entonces, la tarea seria: Portfolio y dentro
+podria agregar los avances de hoy, o los avances que tengo pensado para hoy y que esten en formato de todo list. ej completo
+Portfolio -> Hoy cree el texto de about 
+          -> Complete las experiencias que se muestran
 -- Modulo visualizar tareas en nodos
 1. Propósito
 Crear un módulo que permita visualizar las tareas de una forma mas amable para el usuario.

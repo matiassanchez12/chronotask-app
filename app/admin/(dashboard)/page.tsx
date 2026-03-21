@@ -1,6 +1,6 @@
 import { getTasks } from "@/app/actions";
 import Header from "@/app/admin/(dashboard)/components/header";
-import StatsCards from "@/components/statsCards";
+import StatsCards from "@/components/stats-cards";
 
 export default async function Home() {
   const tasks = await getTasks();

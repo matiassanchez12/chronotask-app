@@ -11,4 +11,6 @@
 export type * from './models/User'
 export type * from './models/UserSettings'
 export type * from './models/Task'
+export type * from './models/Subtask'
+export type * from './models/TaskDependency'
 export type * from './commonInputTypes'

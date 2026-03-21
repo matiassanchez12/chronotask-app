@@ -32,3 +32,13 @@ export type UserSettings = Prisma.UserSettingsModel
  * 
  */
 export type Task = Prisma.TaskModel
+/**
+ * Model Subtask
+ * 
+ */
+export type Subtask = Prisma.SubtaskModel
+/**
+ * Model TaskDependency
+ * 
+ */
+export type TaskDependency = Prisma.TaskDependencyModel

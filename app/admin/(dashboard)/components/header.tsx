@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Leaf, NotebookIcon, FlameIcon } from "lucide-react";
 import { Task } from "@/generated/prisma/browser";
 import { getFormatedDate } from "@/lib/utils";
-import ActionCard from "./actionCard";
+import ActionCard from "./action-card";
 import { format } from "date-fns";
 import Clock from "./clock";
 

@@ -18,7 +18,7 @@ const getDates = () => {
   return [today, todayEnd, weekStart, weekEnd];
 }
 
-export async function getTasks(filter?: string) {
+export async function getTasks(filter?: string, includeDependencies = false) {
   const session = await getSession();
 
   if (!session?.user?.id) {
@@ -28,6 +28,15 @@ export async function getTasks(filter?: string) {
   const tasks = await prisma.task.findMany({
     where: { userId: session.user.id },
     orderBy: { dueDate: "asc" },
+    include: {
+      subtasks: {
+        orderBy: { order: "asc" },
+      },
+      ...(includeDependencies && {
+        dependsOn: { select: { toTaskId: true } },
+        dependents: { select: { fromTaskId: true } },
+      }),
+    },
   });
 
   if (!filter) {
@@ -48,6 +57,10 @@ export async function getTasks(filter?: string) {
         return dueDate < today && !task.completed;
       case "completed":
         return task.completed;
+      case "active": {
+        const now = new Date();
+        return (now >= task.startTime! && now <= task.endTime!) && !task.completed;
+      }
       default:
         return true;
     }
