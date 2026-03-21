@@ -24,8 +24,11 @@ interface PriorityConfig {
   label: string;
 }
 
+interface TaskWithSubtasks extends Task {
+  subtasks?: Subtask[];
+}
 interface ManageTasksProps {
-  tasks: Task[];
+  tasks: TaskWithSubtasks[];
 }
 
 const priorityConfig: Record<string, PriorityConfig> = {
@@ -35,9 +38,9 @@ const priorityConfig: Record<string, PriorityConfig> = {
 };
 
 interface SectionTaskProps {
-  tasks: Task[];
+  tasks: TaskWithSubtasks[];
   title: string;
-  onDelete: (task: Task) => void;
+  onDelete: (task: TaskWithSubtasks) => void;
 }
 
 function SectionTask({ tasks, title, onDelete }: SectionTaskProps) {
@@ -135,7 +138,7 @@ export default function ManageTasks({ tasks }: ManageTasksProps) {
 }
 
 interface ManageTaskCardProps {
-  task: Task;
+  task: TaskWithSubtasks;
   priority: PriorityConfig;
   onToggle: () => void;
   onDelete: () => void;
@@ -196,7 +199,7 @@ function ManageTaskCard({ task, priority, onToggle, onDelete }: ManageTaskCardPr
                   {task.endTime && ` - ${format(new Date(task.endTime), "HH:mm")}`}
                 </span>
               )}
-              {task.subtasks.length > 0 && (<>
+              {task.subtasks && task.subtasks.length > 0 && (<>
                 <Separator orientation="vertical" />
                 <span className="text-xs text-muted-foreground flex items-center gap-1">
                   Completado ({`${task.subtasks.filter((s: Subtask) => s.completed).length}/${task.subtasks.length}`})
@@ -207,7 +210,7 @@ function ManageTaskCard({ task, priority, onToggle, onDelete }: ManageTaskCardPr
           </div>
 
           <div className="flex gap-1 shrink-0">
-            <SubtaskSheet task={task} subtasks={task.subtasks} />
+            <SubtaskSheet task={task} subtasks={task.subtasks!} />
             <Button
               type="button"
               size="icon"

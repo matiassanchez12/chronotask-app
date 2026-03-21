@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { authOptions, getServerSession } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
-export type ActionResult = { success: true } | { success: false; error: string };
+type ActionResult = { success: true } | { success: false; error: string };
 
 export async function getUserSettings() {
   try {
