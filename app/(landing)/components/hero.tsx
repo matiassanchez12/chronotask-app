@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Link, Target, Clock, Zap, CheckCircle } from "lucide-react";
+import { Target, Clock, Zap, CheckCircle } from "lucide-react";
+import Link from "next/link";
 
 export default function Hero () {
   return <main>
