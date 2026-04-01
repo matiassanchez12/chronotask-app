@@ -47,6 +47,7 @@ model Task {
   workTimeMinutes Int?      @default(0)
   breakTimeMinutes Int?     @default(0)
   usePomodoro     Boolean   @default(true)
+  isRoutine       Boolean   @default(false)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   userId          String

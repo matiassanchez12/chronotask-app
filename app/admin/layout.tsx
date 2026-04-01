@@ -12,7 +12,7 @@ export default async function AdminLayout({
   const fontSize = settings?.fontSize || 16;
 
   return (
-    <div style={{ fontSize: `${fontSize}px` }}>
+    <div style={{ fontSize: `${fontSize}px`, overflow: "hidden" }}>
       <AdminLayoutClient>{children}</AdminLayoutClient>
     </div>
   );

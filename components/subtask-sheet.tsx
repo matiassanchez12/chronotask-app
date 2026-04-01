@@ -26,13 +26,15 @@ import { Button } from "./ui/button";
 interface SubtaskSheetProps {
   task: Task;
   subtasks: Subtask[];
-  buttonText?: string;
+  buttonText?: string;  
+  buttonClasses?: string;
 }
 
 export default function SubtaskSheet({
   task,
   subtasks,
-  buttonText
+  buttonText,
+  buttonClasses,
 }: SubtaskSheetProps) {
   const [open, setOpen] = useState(false);
   const [newDescription, setNewDescription] = useState("");
@@ -103,7 +105,7 @@ export default function SubtaskSheet({
           e.stopPropagation();
           setOpen(true);
         }}
-        className={`gap-2 text-muted-foreground border-primary/30 hover:bg-primary/10`}
+        className={`gap-2 text-muted-foreground border-primary/30 hover:bg-primary/10 ${buttonClasses}`}
       >
         <Workflow className="h-4 w-4" />
         {buttonText}

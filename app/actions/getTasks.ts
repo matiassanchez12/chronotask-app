@@ -18,7 +18,7 @@ const getDates = () => {
   return [today, todayEnd, weekStart, weekEnd];
 }
 
-export async function getTasks(filter?: string, includeDependencies = false) {
+export async function getTasks(filter?: string, dateRange?: { from?: string; to?: string }) {
   const session = await getSession();
 
   if (!session?.user?.id) {
@@ -26,16 +26,12 @@ export async function getTasks(filter?: string, includeDependencies = false) {
   }
 
   const tasks = await prisma.task.findMany({
-    where: { userId: session.user.id },
-    orderBy: { dueDate: "asc" },
+    where: { userId: session.user.id, isRoutine: false },
+    orderBy: { dueDate: "desc" },
     include: {
       subtasks: {
-        orderBy: { order: "asc" },
+        orderBy: { order: "desc" },
       },
-      ...(includeDependencies && {
-        dependsOn: { select: { toTaskId: true } },
-        dependents: { select: { fromTaskId: true } },
-      }),
     },
   });
 
@@ -57,6 +53,16 @@ export async function getTasks(filter?: string, includeDependencies = false) {
         return dueDate < today && !task.completed;
       case "completed":
         return task.completed;
+      case "routine":
+        return task.isRoutine;
+      case "range":
+        if (dateRange?.from && dateRange?.to) {
+          const from = new Date(dateRange.from + "T00:00:00");
+          const to = new Date(dateRange.to + "T00:00:00");
+          to.setHours(23, 59, 59, 999);
+          return dueDate >= from && dueDate <= to;
+        }
+        return true;
       case "active": {
         const now = new Date();
         return (now >= task.startTime! && now <= task.endTime!) && !task.completed;
@@ -64,5 +70,21 @@ export async function getTasks(filter?: string, includeDependencies = false) {
       default:
         return true;
     }
+  });
+}
+
+export async function getRoutineTasks() {
+  const session = await getSession();
+
+  if (!session?.user?.id) {
+    return [];
+  }
+
+  return prisma.task.findMany({
+    where: { userId: session.user.id, isRoutine: true },
+    orderBy: { startTime: "asc" },
+    include: {
+      subtasks: { orderBy: { order: "asc" } },
+    },
   });
 }

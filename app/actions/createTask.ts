@@ -21,9 +21,9 @@ export async function createTask(formData: FormData): Promise<ActionResult> {
         where: { userId },
       });
 
-      if (taskCount >= 10) {
-        return { success: false, error: "Límite de 10 tareas alcanzado para modo demo" };
-      }
+      // if (taskCount >= 10) {
+      //   return { success: false, error: "Límite de 10 tareas alcanzado para modo demo" };
+      // }
     }
 
     const title = formData.get("title") as string;
@@ -32,6 +32,7 @@ export async function createTask(formData: FormData): Promise<ActionResult> {
     const startTime = formData.get("startTime") as string;
     const endTime = formData.get("endTime") as string;
     const usePomodoro = formData.get("usePomodoro") as string;
+    const isRoutine = formData.get("isRoutine") as string;
 
     if (!title?.trim()) return { success: false, error: "Title is required" };
     if (!dueDate) return { success: false, error: "Due date is required" };
@@ -44,6 +45,7 @@ export async function createTask(formData: FormData): Promise<ActionResult> {
         startTime: startTime ? new Date(startTime) : null,
         endTime: endTime ? new Date(endTime) : null,
         usePomodoro: usePomodoro !== "false",
+        isRoutine: isRoutine === "true",
         userId,
       },
     });

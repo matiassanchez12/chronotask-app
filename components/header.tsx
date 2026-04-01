@@ -8,7 +8,7 @@ interface HeaderProps {
 
 export default function Header({ title, subTitle }: HeaderProps) {
   return (
-   <div className="flex items-center justify-between">
+   <div className="flex items-center justify-between">  
           <div>
             <Link
               href="/admin" 

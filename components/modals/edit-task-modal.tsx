@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Flag, Clock, Timer } from "lucide-react";
+import { Flag, Clock, Timer, Repeat } from "lucide-react";
 import { Modal } from "@/components/ui/modal";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from "date-fns";
@@ -35,6 +35,7 @@ const editTaskSchema = z
     endTime: z.string().optional(),
     priority: z.enum(["low", "medium", "high"]),
     usePomodoro: z.boolean(),
+    isRoutine: z.boolean(),
   })
   .refine((data) => data.dueDate !== undefined, {
     message: "La fecha límite es requerida",
@@ -58,6 +59,7 @@ export default function EditTaskModal({ task, isOpen, setIsOpen }: EditTaskDialo
     control,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<EditTaskFormData>({
     resolver: zodResolver(editTaskSchema),
@@ -68,8 +70,11 @@ export default function EditTaskModal({ task, isOpen, setIsOpen }: EditTaskDialo
       endTime: task.endTime ? format(new Date(task.endTime), "HH:mm") : "",
       priority: task.priority as "low" | "medium" | "high",
       usePomodoro: task.usePomodoro ?? true,
+      isRoutine: task.isRoutine ?? false,
     },
   });
+
+  const isRoutine = watch("isRoutine");
 
   const handleClose = () => {
     setIsOpen(false);
@@ -80,6 +85,7 @@ export default function EditTaskModal({ task, isOpen, setIsOpen }: EditTaskDialo
       endTime: task.endTime ? format(new Date(task.endTime), "HH:mm") : "",
       priority: task.priority as "low" | "medium" | "high",
       usePomodoro: task.usePomodoro ?? true,
+      isRoutine: task.isRoutine ?? false,
     });
   };
 
@@ -91,6 +97,7 @@ export default function EditTaskModal({ task, isOpen, setIsOpen }: EditTaskDialo
     formData.set("dueDate", data.dueDate.toISOString());
     formData.set("priority", data.priority);
     formData.set("usePomodoro", data.usePomodoro.toString());
+    formData.set("isRoutine", data.isRoutine.toString());
 
     if (data.startTime) {
       const startDateTime = new Date(data.dueDate);
@@ -276,6 +283,31 @@ export default function EditTaskModal({ task, isOpen, setIsOpen }: EditTaskDialo
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />
+              </div>
+            )}
+          />
+
+          {/* Routine Switch */}
+          <Controller
+            name="isRoutine"
+            control={control}
+            render={({ field }) => (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between p-3 bg-secondary/30 rounded-lg border border-border/50">
+                  <Label className="text-sm font-medium text-foreground flex items-center gap-2 cursor-pointer">
+                    <Repeat className="h-4 w-4 text-muted-foreground" />
+                    Rutina diaria
+                  </Label>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </div>
+                {field.value && (
+                  <p className="text-xs text-muted-foreground pl-2">
+                    Se repite diariamente a la misma hora
+                  </p>
+                )}
               </div>
             )}
           />

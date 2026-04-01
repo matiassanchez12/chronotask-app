@@ -29,11 +29,13 @@ export default function AdminLayoutClient({
   }
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-full w-full">
+      {/* sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className="flex-1 flex flex-col">
+      {/* content */}
+      <div className="flex-1 flex flex-col w-full lg:w-[calc(100vw-255px)] h-full">
         <Navbar onMenuClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 p-4 lg:p-6 overflow-y-auto">
+        <main className="p-4 lg:p-6 h-[calc(100vh-56px)]">
           {children}
         </main>
       </div>

@@ -2,47 +2,36 @@
 
 import { useMemo } from "react";
 import { CheckCircle2, Calendar, Target, MinusCircle } from "lucide-react";
-import StatCard from "./stat-card";
+import StatCard from "../stat-card";
+import { Task } from "@/generated/prisma/client";
 
-interface Task {
-  id: string;
-  title: string;
-  dueDate: Date | string;
-  startTime: Date | string | null;
-  endTime: Date | string | null;
-  priority: string;
-  completed: boolean;
-  workTimeMinutes: number | null;
-  breakTimeMinutes: number | null;
-  createdAt: Date | string;
-  updatedAt: Date | string;
-  userId?: string;
-}
-
-interface StatsCardsProps {
-  tasks: Task[];
-  weeklyGoal?: number;
-}
-
-export default function StatsCards({ tasks, weeklyGoal }: StatsCardsProps) {
-  const isTaskInProgress = (task: Task) => {
-    if (!task.startTime || !task.endTime) return false;
-    const now = new Date();
-    const start = new Date(task.startTime);
-    const end = new Date(task.endTime);
-    return now >= start && now <= end && !task.completed;
+interface DashboardContentProps {
+  data: {
+    tasks: Task[];
+    weeklyGoal: number;
   };
+}
+
+function isTaskInProgress(task: Task) {
+  if (!task.startTime || !task.endTime) return false;
+  const now = new Date();
+  const start = new Date(task.startTime);
+  const end = new Date(task.endTime);
+  return now >= start && now <= end && !task.completed;
+}
+
+export function DashboardContent({ data }: DashboardContentProps) {
+  const { tasks, weeklyGoal } = data;
 
   const stats = useMemo(() => {
     const completedTasks = tasks.filter((t) => t.completed).length;
     const todayTasks = tasks.filter(isTaskInProgress).length;
     const pendingTasks = tasks.filter((t) => !t.completed).length;
-    const weeklyGoalValue = weeklyGoal ?? 20;
-    const weeklyProgress = Math.min(completedTasks, weeklyGoalValue);
+    const weeklyProgress = Math.min(completedTasks, weeklyGoal);
 
     return {
       completedTasks,
-      weeklyGoal: weeklyGoalValue,
+      weeklyGoal,
       weeklyProgress,
       todayTasks,
       pendingTasks,

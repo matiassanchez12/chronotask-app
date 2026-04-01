@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Flag, Plus, Clock, Timer } from "lucide-react";
+import { Flag, Plus, Clock, Timer, Repeat } from "lucide-react";
 import { Modal } from "@/components/ui/modal";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from "date-fns";
@@ -30,6 +30,7 @@ const addTaskSchema = z
     endTime: z.string().optional(),
     priority: z.enum(["low", "medium", "high"]),
     usePomodoro: z.boolean(),
+    isRoutine: z.boolean(),
   })
   .refine((data) => data.dueDate !== undefined, {
     message: "La fecha límite es requerida",
@@ -66,6 +67,7 @@ export default function AddTaskModal() {
     control,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<AddTaskFormData>({
     resolver: zodResolver(addTaskSchema),
@@ -76,12 +78,15 @@ export default function AddTaskModal() {
       endTime: "",
       priority: "medium",
       usePomodoro: true,
+      isRoutine: false,
     },
   });
 
+  const isRoutine = watch("isRoutine");
+
   const handleClose = () => {
     setIsOpen(false);
-    reset({ title: "", dueDate: new Date(), startTime: "", endTime: "", priority: "medium", usePomodoro: true });
+    reset({ title: "", dueDate: new Date(), startTime: "", endTime: "", priority: "medium", usePomodoro: true, isRoutine: false });
   };
 
   const onSubmit = async (data: AddTaskFormData) => {
@@ -93,6 +98,7 @@ export default function AddTaskModal() {
       formData.set("dueDate", data.dueDate.toISOString());
       formData.set("priority", data.priority);
       formData.set("usePomodoro", data.usePomodoro.toString());
+      formData.set("isRoutine", data.isRoutine.toString());
       
       if (data.startTime) {
         const startDateTime = new Date(data.dueDate);
@@ -290,6 +296,31 @@ export default function AddTaskModal() {
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />
+              </div>
+            )}
+          />
+
+          {/* Routine Switch */}
+          <Controller
+            name="isRoutine"
+            control={control}
+            render={({ field }) => (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between p-3 bg-secondary/30 rounded-lg border border-border/50">
+                  <Label className="text-sm font-medium text-foreground flex items-center gap-2 cursor-pointer">
+                    <Repeat className="h-4 w-4 text-muted-foreground" />
+                    Rutina diaria
+                  </Label>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </div>
+                {field.value && (
+                  <p className="text-xs text-muted-foreground pl-2">
+                    Se repite diariamente a la misma hora
+                  </p>
+                )}
               </div>
             )}
           />

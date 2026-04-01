@@ -56,16 +56,20 @@ export const authOptions: AuthOptions = {
     signIn: "/sign-in",
   },
   callbacks: {
-    async jwt({ token, user, account, trigger }: { token: any; user?: any; account?: any; trigger?: string }) {
+    async jwt({ token, user, account, trigger }) {
       if ((account?.provider === "google" && user?.email) || trigger === "update") {
         try {
           const email = user?.email || token.email;
+
+          if (!email) {
+            return token;
+          }
 
           const existingUser = await prisma.user.findUnique({
             where: { email },
           });
 
-          if (!existingUser) {
+          if (!existingUser && user.email) {
             const newUser = await prisma.user.create({
               data: {
                 email: user.email,
@@ -77,8 +81,10 @@ export const authOptions: AuthOptions = {
             token.id = newUser.id;
             token.image = newUser.image;
           } else {
-            token.id = existingUser.id;
-            token.image = existingUser.image;
+            if (existingUser) {
+              token.id = existingUser.id;
+              token.image = existingUser.image;
+            }
           }
         } catch (e) {
           console.error("Google auth error:", e);
@@ -86,11 +92,11 @@ export const authOptions: AuthOptions = {
       } else if (account?.provider === "credentials" && user?.id) {
         // Para credentials, el usuario ya viene con id desde authorize
         token.id = user.id;
-        token.image = user.image;
+        token.image = user.image || null;
       }
       return token;
     },
-    async session({ session, token }: { session: any; token: any }) {
+    async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id;
         session.user.image = token.image;

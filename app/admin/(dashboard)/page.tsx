@@ -1,16 +1,13 @@
-import { getTasks, getUserSettings } from "@/app/actions";
-import Header from "@/app/admin/(dashboard)/components/header";
-import StatsCards from "@/components/stats-cards";
+import { fetchDashboardData } from "@/components/dashboard/fetch-dashboard-data";
+import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
+import { DashboardContent } from "@/components/dashboard/dashboard-content";
 
 export default async function Home() {
-  const tasks = await getTasks();
-  const settings = await getUserSettings();
-  const weeklyGoal = settings?.weeklyGoal ?? 20;
+  const data = await fetchDashboardData();
 
   return (
-    <div className="space-y-10">
-      <Header tasks={tasks} />
-      <StatsCards tasks={tasks} weeklyGoal={weeklyGoal} />
-    </div>
+    <DashboardLayout tasks={data.tasks}>
+      <DashboardContent data={data} />
+    </DashboardLayout>
   );
 }

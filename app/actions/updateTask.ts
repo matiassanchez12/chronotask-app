@@ -27,6 +27,7 @@ export async function updateTask(
     const startTime = formData.get("startTime") as string;
     const endTime = formData.get("endTime") as string;
     const usePomodoro = formData.get("usePomodoro") as string;
+    const isRoutine = formData.get("isRoutine") as string;
 
     if (!title?.trim()) return { success: false, error: "Title is required" };
     if (!dueDate) return { success: false, error: "Due date is required" };
@@ -40,6 +41,7 @@ export async function updateTask(
         startTime: startTime ? new Date(startTime) : null,
         endTime: endTime ? new Date(endTime) : null,
         usePomodoro: usePomodoro === "true",
+        isRoutine: isRoutine === "true",
       },
     });
 
@@ -88,14 +90,14 @@ export async function addTaskDependency(
 
     revalidatePath("/admin/diagram");
     return { success: true };
-  } catch (e: any) {
-    if (e.code === 'P2002') {
+  } catch (e: unknown) {
+    if (e && typeof e === 'object' && 'code' in e && e.code === 'P2002') {
       return { success: false, error: "La dependencia ya existe" };
     }
     console.error("addTaskDependency:", e);
     return {
       success: false,
-      error: e instanceof Error ? e.message : "Failed to add dependency",
+      error: "Failed to add dependency",
     };
   }
 }

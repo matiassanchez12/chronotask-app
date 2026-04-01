@@ -112,6 +112,7 @@ export const TaskScalarFieldEnum = {
   workTimeMinutes: 'workTimeMinutes',
   breakTimeMinutes: 'breakTimeMinutes',
   usePomodoro: 'usePomodoro',
+  isRoutine: 'isRoutine',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   userId: 'userId'

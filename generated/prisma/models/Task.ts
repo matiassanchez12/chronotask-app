@@ -47,6 +47,7 @@ export type TaskMinAggregateOutputType = {
   workTimeMinutes: number | null
   breakTimeMinutes: number | null
   usePomodoro: boolean | null
+  isRoutine: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   userId: string | null
@@ -63,6 +64,7 @@ export type TaskMaxAggregateOutputType = {
   workTimeMinutes: number | null
   breakTimeMinutes: number | null
   usePomodoro: boolean | null
+  isRoutine: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   userId: string | null
@@ -79,6 +81,7 @@ export type TaskCountAggregateOutputType = {
   workTimeMinutes: number
   breakTimeMinutes: number
   usePomodoro: number
+  isRoutine: number
   createdAt: number
   updatedAt: number
   userId: number
@@ -107,6 +110,7 @@ export type TaskMinAggregateInputType = {
   workTimeMinutes?: true
   breakTimeMinutes?: true
   usePomodoro?: true
+  isRoutine?: true
   createdAt?: true
   updatedAt?: true
   userId?: true
@@ -123,6 +127,7 @@ export type TaskMaxAggregateInputType = {
   workTimeMinutes?: true
   breakTimeMinutes?: true
   usePomodoro?: true
+  isRoutine?: true
   createdAt?: true
   updatedAt?: true
   userId?: true
@@ -139,6 +144,7 @@ export type TaskCountAggregateInputType = {
   workTimeMinutes?: true
   breakTimeMinutes?: true
   usePomodoro?: true
+  isRoutine?: true
   createdAt?: true
   updatedAt?: true
   userId?: true
@@ -242,6 +248,7 @@ export type TaskGroupByOutputType = {
   workTimeMinutes: number | null
   breakTimeMinutes: number | null
   usePomodoro: boolean
+  isRoutine: boolean
   createdAt: Date
   updatedAt: Date
   userId: string
@@ -281,6 +288,7 @@ export type TaskWhereInput = {
   workTimeMinutes?: Prisma.IntNullableFilter<"Task"> | number | null
   breakTimeMinutes?: Prisma.IntNullableFilter<"Task"> | number | null
   usePomodoro?: Prisma.BoolFilter<"Task"> | boolean
+  isRoutine?: Prisma.BoolFilter<"Task"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   userId?: Prisma.StringFilter<"Task"> | string
@@ -301,6 +309,7 @@ export type TaskOrderByWithRelationInput = {
   workTimeMinutes?: Prisma.SortOrderInput | Prisma.SortOrder
   breakTimeMinutes?: Prisma.SortOrderInput | Prisma.SortOrder
   usePomodoro?: Prisma.SortOrder
+  isRoutine?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -324,6 +333,7 @@ export type TaskWhereUniqueInput = Prisma.AtLeast<{
   workTimeMinutes?: Prisma.IntNullableFilter<"Task"> | number | null
   breakTimeMinutes?: Prisma.IntNullableFilter<"Task"> | number | null
   usePomodoro?: Prisma.BoolFilter<"Task"> | boolean
+  isRoutine?: Prisma.BoolFilter<"Task"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   userId?: Prisma.StringFilter<"Task"> | string
@@ -344,6 +354,7 @@ export type TaskOrderByWithAggregationInput = {
   workTimeMinutes?: Prisma.SortOrderInput | Prisma.SortOrder
   breakTimeMinutes?: Prisma.SortOrderInput | Prisma.SortOrder
   usePomodoro?: Prisma.SortOrder
+  isRoutine?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -368,6 +379,7 @@ export type TaskScalarWhereWithAggregatesInput = {
   workTimeMinutes?: Prisma.IntNullableWithAggregatesFilter<"Task"> | number | null
   breakTimeMinutes?: Prisma.IntNullableWithAggregatesFilter<"Task"> | number | null
   usePomodoro?: Prisma.BoolWithAggregatesFilter<"Task"> | boolean
+  isRoutine?: Prisma.BoolWithAggregatesFilter<"Task"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Task"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Task"> | Date | string
   userId?: Prisma.StringWithAggregatesFilter<"Task"> | string
@@ -384,6 +396,7 @@ export type TaskCreateInput = {
   workTimeMinutes?: number | null
   breakTimeMinutes?: number | null
   usePomodoro?: boolean
+  isRoutine?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutTasksInput
@@ -403,6 +416,7 @@ export type TaskUncheckedCreateInput = {
   workTimeMinutes?: number | null
   breakTimeMinutes?: number | null
   usePomodoro?: boolean
+  isRoutine?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   userId: string
@@ -422,6 +436,7 @@ export type TaskUpdateInput = {
   workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   usePomodoro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRoutine?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
@@ -441,6 +456,7 @@ export type TaskUncheckedUpdateInput = {
   workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   usePomodoro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRoutine?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -460,6 +476,7 @@ export type TaskCreateManyInput = {
   workTimeMinutes?: number | null
   breakTimeMinutes?: number | null
   usePomodoro?: boolean
+  isRoutine?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   userId: string
@@ -476,6 +493,7 @@ export type TaskUpdateManyMutationInput = {
   workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   usePomodoro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRoutine?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -491,6 +509,7 @@ export type TaskUncheckedUpdateManyInput = {
   workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   usePomodoro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRoutine?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -517,6 +536,7 @@ export type TaskCountOrderByAggregateInput = {
   workTimeMinutes?: Prisma.SortOrder
   breakTimeMinutes?: Prisma.SortOrder
   usePomodoro?: Prisma.SortOrder
+  isRoutine?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -538,6 +558,7 @@ export type TaskMaxOrderByAggregateInput = {
   workTimeMinutes?: Prisma.SortOrder
   breakTimeMinutes?: Prisma.SortOrder
   usePomodoro?: Prisma.SortOrder
+  isRoutine?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -554,6 +575,7 @@ export type TaskMinOrderByAggregateInput = {
   workTimeMinutes?: Prisma.SortOrder
   breakTimeMinutes?: Prisma.SortOrder
   usePomodoro?: Prisma.SortOrder
+  isRoutine?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -676,6 +698,7 @@ export type TaskCreateWithoutUserInput = {
   workTimeMinutes?: number | null
   breakTimeMinutes?: number | null
   usePomodoro?: boolean
+  isRoutine?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   dependsOn?: Prisma.TaskDependencyCreateNestedManyWithoutToTaskInput
@@ -694,6 +717,7 @@ export type TaskUncheckedCreateWithoutUserInput = {
   workTimeMinutes?: number | null
   breakTimeMinutes?: number | null
   usePomodoro?: boolean
+  isRoutine?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   dependsOn?: Prisma.TaskDependencyUncheckedCreateNestedManyWithoutToTaskInput
@@ -741,6 +765,7 @@ export type TaskScalarWhereInput = {
   workTimeMinutes?: Prisma.IntNullableFilter<"Task"> | number | null
   breakTimeMinutes?: Prisma.IntNullableFilter<"Task"> | number | null
   usePomodoro?: Prisma.BoolFilter<"Task"> | boolean
+  isRoutine?: Prisma.BoolFilter<"Task"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   userId?: Prisma.StringFilter<"Task"> | string
@@ -757,6 +782,7 @@ export type TaskCreateWithoutSubtasksInput = {
   workTimeMinutes?: number | null
   breakTimeMinutes?: number | null
   usePomodoro?: boolean
+  isRoutine?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutTasksInput
@@ -775,6 +801,7 @@ export type TaskUncheckedCreateWithoutSubtasksInput = {
   workTimeMinutes?: number | null
   breakTimeMinutes?: number | null
   usePomodoro?: boolean
+  isRoutine?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   userId: string
@@ -809,6 +836,7 @@ export type TaskUpdateWithoutSubtasksInput = {
   workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   usePomodoro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRoutine?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
@@ -827,6 +855,7 @@ export type TaskUncheckedUpdateWithoutSubtasksInput = {
   workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   usePomodoro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRoutine?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -845,6 +874,7 @@ export type TaskCreateWithoutDependentsInput = {
   workTimeMinutes?: number | null
   breakTimeMinutes?: number | null
   usePomodoro?: boolean
+  isRoutine?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutTasksInput
@@ -863,6 +893,7 @@ export type TaskUncheckedCreateWithoutDependentsInput = {
   workTimeMinutes?: number | null
   breakTimeMinutes?: number | null
   usePomodoro?: boolean
+  isRoutine?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   userId: string
@@ -886,6 +917,7 @@ export type TaskCreateWithoutDependsOnInput = {
   workTimeMinutes?: number | null
   breakTimeMinutes?: number | null
   usePomodoro?: boolean
+  isRoutine?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutTasksInput
@@ -904,6 +936,7 @@ export type TaskUncheckedCreateWithoutDependsOnInput = {
   workTimeMinutes?: number | null
   breakTimeMinutes?: number | null
   usePomodoro?: boolean
+  isRoutine?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   userId: string
@@ -938,6 +971,7 @@ export type TaskUpdateWithoutDependentsInput = {
   workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   usePomodoro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRoutine?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
@@ -956,6 +990,7 @@ export type TaskUncheckedUpdateWithoutDependentsInput = {
   workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   usePomodoro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRoutine?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -985,6 +1020,7 @@ export type TaskUpdateWithoutDependsOnInput = {
   workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   usePomodoro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRoutine?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
@@ -1003,6 +1039,7 @@ export type TaskUncheckedUpdateWithoutDependsOnInput = {
   workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   usePomodoro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRoutine?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1021,6 +1058,7 @@ export type TaskCreateManyUserInput = {
   workTimeMinutes?: number | null
   breakTimeMinutes?: number | null
   usePomodoro?: boolean
+  isRoutine?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1036,6 +1074,7 @@ export type TaskUpdateWithoutUserInput = {
   workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   usePomodoro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRoutine?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dependsOn?: Prisma.TaskDependencyUpdateManyWithoutToTaskNestedInput
@@ -1054,6 +1093,7 @@ export type TaskUncheckedUpdateWithoutUserInput = {
   workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   usePomodoro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRoutine?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dependsOn?: Prisma.TaskDependencyUncheckedUpdateManyWithoutToTaskNestedInput
@@ -1072,6 +1112,7 @@ export type TaskUncheckedUpdateManyWithoutUserInput = {
   workTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   breakTimeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   usePomodoro?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRoutine?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1136,6 +1177,7 @@ export type TaskSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   workTimeMinutes?: boolean
   breakTimeMinutes?: boolean
   usePomodoro?: boolean
+  isRoutine?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
@@ -1157,6 +1199,7 @@ export type TaskSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   workTimeMinutes?: boolean
   breakTimeMinutes?: boolean
   usePomodoro?: boolean
+  isRoutine?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
@@ -1174,6 +1217,7 @@ export type TaskSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   workTimeMinutes?: boolean
   breakTimeMinutes?: boolean
   usePomodoro?: boolean
+  isRoutine?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
@@ -1191,12 +1235,13 @@ export type TaskSelectScalar = {
   workTimeMinutes?: boolean
   breakTimeMinutes?: boolean
   usePomodoro?: boolean
+  isRoutine?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
 }
 
-export type TaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "dueDate" | "startTime" | "endTime" | "priority" | "completed" | "workTimeMinutes" | "breakTimeMinutes" | "usePomodoro" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["task"]>
+export type TaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "dueDate" | "startTime" | "endTime" | "priority" | "completed" | "workTimeMinutes" | "breakTimeMinutes" | "usePomodoro" | "isRoutine" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["task"]>
 export type TaskInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   dependsOn?: boolean | Prisma.Task$dependsOnArgs<ExtArgs>
@@ -1230,6 +1275,7 @@ export type $TaskPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     workTimeMinutes: number | null
     breakTimeMinutes: number | null
     usePomodoro: boolean
+    isRoutine: boolean
     createdAt: Date
     updatedAt: Date
     userId: string
@@ -1670,6 +1716,7 @@ export interface TaskFieldRefs {
   readonly workTimeMinutes: Prisma.FieldRef<"Task", 'Int'>
   readonly breakTimeMinutes: Prisma.FieldRef<"Task", 'Int'>
   readonly usePomodoro: Prisma.FieldRef<"Task", 'Boolean'>
+  readonly isRoutine: Prisma.FieldRef<"Task", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Task", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Task", 'DateTime'>
   readonly userId: Prisma.FieldRef<"Task", 'String'>

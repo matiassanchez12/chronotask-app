@@ -12,35 +12,53 @@ export function calculateTaskPomodoros(
   task: Task,
   pomodoroDuration: number,
   shortBreakDuration: number,
-  longBreakDuration: number = 15
+  longBreakDuration: number = 15,
+  currentTime?: Date
 ): Pomodoro[] {
   if (!task.startTime || !task.endTime) return [];
 
   const taskStart = new Date(task.startTime);
   const taskEnd = new Date(task.endTime);
-  const taskDuration = (taskEnd.getTime() - taskStart.getTime()) / (1000 * 60);
+  const effectiveStart = currentTime && currentTime > taskStart ? currentTime : taskStart;
+  const taskDuration = (taskEnd.getTime() - effectiveStart.getTime()) / (1000 * 60);
+
+  if (taskDuration <= 0) return [];
+
+  const pomodoros: Pomodoro[] = [];
+  let currentStart = effectiveStart;
 
   const fullPomodoros = Math.floor(taskDuration / pomodoroDuration);
   const remainingMinutes = taskDuration % pomodoroDuration;
 
-  const pomodoros: Pomodoro[] = [];
-  let currentStart = taskStart;
-
   for (let i = 0; i < fullPomodoros; i++) {
-    pomodoros.push({ start: currentStart, end: new Date(currentStart.getTime() + pomodoroDuration * 60 * 1000) });
+    pomodoros.push({
+      start: currentStart,
+      end: new Date(currentStart.getTime() + pomodoroDuration * 60 * 1000)
+    });
 
-    if (i < fullPomodoros - 1 || remainingMinutes > 0) {
+    if (i < fullPomodoros - 1) {
       const isLongBreak = (i + 1) % 4 === 0;
       const breakDuration = isLongBreak ? longBreakDuration : shortBreakDuration;
-      const breakEnd = new Date(currentStart.getTime() + (pomodoroDuration + breakDuration) * 60 * 1000);
-      pomodoros.push({ start: new Date(currentStart.getTime() + pomodoroDuration * 60 * 1000), end: breakEnd, isLongBreak });
+      const breakEnd = new Date(pomodoros[pomodoros.length - 1].end.getTime() + breakDuration * 60 * 1000);
+      pomodoros.push({
+        start: pomodoros[pomodoros.length - 1].end,
+        end: breakEnd,
+        isLongBreak
+      });
       currentStart = breakEnd;
     }
   }
 
   if (remainingMinutes > 0) {
-    const finalPomodoroEnd = new Date(currentStart.getTime() + remainingMinutes * 60 * 1000);
-    pomodoros.push({ start: currentStart, end: finalPomodoroEnd });
+    const lastPomodoro = pomodoros.findLast(p => !p.isLongBreak);
+    if (lastPomodoro) {
+      lastPomodoro.end = new Date(lastPomodoro.end.getTime() + remainingMinutes * 60 * 1000);
+    } else {
+      pomodoros.push({
+        start: currentStart,
+        end: new Date(currentStart.getTime() + remainingMinutes * 60 * 1000)
+      });
+    }
   }
 
   return pomodoros;
@@ -69,12 +87,17 @@ export function getPhaseLabel(phase: Phase): string {
 }
 
 export function getActiveSessionInfo(pomodoros: Pomodoro[], now: Date) {
-  for (let i = pomodoros.length - 1; i >= 0; i--) {
-    if (now >= pomodoros[i].start) {
+  for (let i = 0; i < pomodoros.length; i++) {
+    if (now >= pomodoros[i].start && now < pomodoros[i].end) {
       return {
         sessionIndex: i,
         secondsElapsed: Math.floor((now.getTime() - pomodoros[i].start.getTime()) / 1000),
       };
+    }
+  }
+  for (let i = pomodoros.length - 1; i >= 0; i--) {
+    if (now >= pomodoros[i].start) {
+      return { sessionIndex: i, secondsElapsed: 0 };
     }
   }
   return { sessionIndex: 0, secondsElapsed: 0 };
