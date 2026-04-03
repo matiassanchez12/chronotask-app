@@ -77,7 +77,7 @@ function TaskCardInner({
 
   const handleDelete = useCallback(async () => {
     if (confirmBeforeDelete === null) return;
-    
+
     if (confirmBeforeDelete) {
       onDelete();
     } else {
@@ -89,7 +89,7 @@ function TaskCardInner({
       }
     }
   }, [confirmBeforeDelete, onDelete, task.id]);
-  console.log(task)
+
   return (
     <>
       <EditTaskModal
@@ -117,7 +117,7 @@ function TaskCardInner({
             <Check className="h-3 w-3 sm:h-4 sm:w-4" />
           </Button>
 
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 flex flex-col min-w-0">
             <p
               className={cn(
                 "font-medium text-sm sm:text-base truncate max-w-[calc(100%-40px)]",
@@ -126,24 +126,26 @@ function TaskCardInner({
             >
               {task.title}
             </p>
-            <div className="flex items-center gap-1 sm:gap-2 mt-0.5 sm:mt-1 h-4 sm:h-5 ">
-              {isActive && (
-                <Badge variant="default" className="bg-amber-500 hover:bg-amber-600 text-[10px] h-4 sm:h-5 shrink-0">
-                  En proceso
-                </Badge>
-              )}
-              {task.startTime && (
-                <span className="text-[10px] sm:text-xs text-muted-foreground items-center gap-1 hidden sm:flex">
-                  <Clock className="h-3 w-3" />
-                  {format(new Date(task.startTime), "HH:mm")}
-                  {task.endTime && ` - ${format(new Date(task.endTime), "HH:mm")}`}
-                </span>
-              )}
-              {task.subtasks && task.subtasks.length > 0 && (
-                <span className="text-[10px] sm:text-xs text-muted-foreground truncate shrink-0">
-                  {task.subtasks.filter((s: Subtask) => s.completed).length}/{task.subtasks.length}
-                </span>
-              )}
+            <div>
+              <div className="flex items-center gap-1 sm:gap-2 mt-0.5 sm:mt-1 h-4 sm:h-5 ">
+                {isActive && (
+                  <Badge variant="default" className="bg-amber-500 hover:bg-amber-600 text-[10px] h-4 sm:h-5 shrink-0">
+                    En proceso
+                  </Badge>
+                )}
+                {task.startTime && (
+                  <span className="text-[10px] sm:text-xs text-muted-foreground items-center gap-1 hidden sm:flex">
+                    <Clock className="h-3 w-3" />
+                    {format(new Date(task.startTime), "HH:mm")}
+                    {task.endTime && ` - ${format(new Date(task.endTime), "HH:mm")}`}
+                  </span>
+                )}
+                {task.subtasks && task.subtasks.length > 0 && (
+                  <span className="text-[10px] sm:text-xs text-muted-foreground truncate shrink-0">
+                    {task.subtasks.filter((s: Subtask) => s.completed).length}/{task.subtasks.length}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 

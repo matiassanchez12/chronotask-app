@@ -45,6 +45,7 @@ function TaskCardCompactInner({
   onToggle: () => void;
 }) {
   const [openModal, setOpenModal] = useState({ edit: false });
+  const [isLoading, setIsLoading] = useState(false);
   const now = new Date();
   const isActive =
     task.startTime &&
@@ -54,11 +55,13 @@ function TaskCardCompactInner({
     now <= new Date(task.endTime);
 
   const toggleComplete = async () => {
+    setIsLoading(true);
     const result = await serverToggleTask(task.id);
+
     if (!result.success) {
       toast.error("Error al actualizar la tarea");
     } else {
-      onToggle();
+      setIsLoading(false);
     }
   };
 
@@ -87,7 +90,7 @@ function TaskCardCompactInner({
               {task.title}
             </p>
             <div className="flex items-center gap-1 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 group-hover:dark:bg-blue-600/60 group-hover:bg-cyan-600/20 group-hover:rounded-xl group-hover:rounded-4 group-hover:p-1 transition-opacity">
-              <Button size="sm" variant="ghost" className="h-7 w-7" onClick={toggleComplete}>
+              <Button size="sm" variant="ghost" disabled={isLoading} className="h-7 w-7" onClick={toggleComplete}>
                 <Check />
               </Button>
               <Button size="sm" variant="ghost" className="h-7 w-7" onClick={() => setOpenModal({ ...openModal, edit: true })}>

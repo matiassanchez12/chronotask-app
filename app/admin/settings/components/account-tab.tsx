@@ -19,12 +19,12 @@ export function AccountTab({ session, uploading, onUpload, fileInputRef }: Accou
       <Card className="rounded-2xl border bg-card/60 backdrop-blur-sm">
         <CardHeader className="pb-4">
           <CardTitle className="text-base">Foto de perfil</CardTitle>
-          <CardDescription>Tu imagen se muestra en todas las tareas</CardDescription>
+          <CardDescription>Subí tu foto de perfil</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-6">
             <div className="relative group">
-              <div className="h-24 w-24 rounded-2xl overflow-hidden bg-muted shrink-0 ring-4 ring-border/50 shadow-lg transition-shadow group-hover:ring-foreground/20">
+              <div className="h-24 w-24 overflow-hidden bg-muted shrink-0 ring-4 ring-border/50 shadow-lg transition-shadow">
                 {session?.user.image ? (
                   <Image
                     src={session.user.image}
@@ -37,9 +37,6 @@ export function AccountTab({ session, uploading, onUpload, fileInputRef }: Accou
                     <User className="h-10 w-10 text-muted-foreground" />
                   </div>
                 )}
-              </div>
-              <div className="absolute inset-0 rounded-2xl bg-foreground/0 group-hover:bg-foreground/10 transition-colors flex items-center justify-center">
-                <Upload className="h-8 w-8 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-md" />
               </div>
             </div>
             
